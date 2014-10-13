@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="false" android:state_focused="false">              <!-- DEFAULT -->
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="2dp"/>
+                    <solid android:color="@color/grey_300"/>
+                </shape>
+            </item>
+
+            <item>
+                <inset android:insetBottom="2dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="2dp"/>
+                        <solid android:color="@color/grey_50"/>
+                    </shape>
+                </inset>
+            </item>
+        </layer-list>
+    </item>
+
+    <item android:state_pressed="true" android:state_focused="false">               <!-- PRESSED -->
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="2dp"/>
+                    <solid android:color="@color/grey_400"/>
+                </shape>
+            </item>
+
+            <item>
+                <inset android:insetBottom="2dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="2dp"/>
+                        <solid android:color="@color/grey_200"/>
+                    </shape>
+                </inset>
+            </item>
+        </layer-list>
+    </item>
+
+    <item android:state_pressed="false" android:state_focused="true">               <!-- FOCUSED -->
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="2dp"/>
+                    <solid android:color="@color/grey_400"/>
+                </shape>
+            </item>
+
+            <item>
+                <inset android:insetBottom="2dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="2dp"/>
+                        <solid android:color="@color/grey_200"/>
+                    </shape>
+                </inset>
+            </item>
+        </layer-list>
+    </item>
+
+    <item android:state_pressed="true" android:state_focused="true">                <!--  F + P  -->
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="2dp"/>
+                    <solid android:color="@color/grey_400"/>
+                </shape>
+            </item>
+
+            <item>
+                <inset android:insetBottom="2dp">
+                    <shape android:shape="rectangle">
+                        <corners android:radius="2dp"/>
+                        <solid android:color="@color/grey_200"/>
+                    </shape>
+                </inset>
+            </item>
+        </layer-list>
+    </item>
+
+</selector>
