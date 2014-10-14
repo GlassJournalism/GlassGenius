@@ -10,6 +10,10 @@
     android:paddingRight="16dp"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    android:textSize="18sp">
+    android:textSize="22sp"
+    android:textColor="@color/grey_800"
+    android:textColorHighlight="@color/grey_600"
+    android:background="@drawable/navigation_drawer_item_selector"
+    android:checkable="true">
 
 </TextView>

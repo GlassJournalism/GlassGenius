@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:background="@drawable/card">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="244dp"
+        android:id="@+id/imageView"
+        android:src="@drawable/placeholder_photo" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/semitransparent_black_gradient"
+        android:layout_gravity="bottom"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="test_video.mp4"
+                android:id="@+id/textView"
+                android:gravity="center_vertical"
+                android:textColor="@color/grey_0"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="4:13"
+                android:id="@+id/textView2"
+                android:textColor="@color/grey_0" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imageView2"
+            android:src="@drawable/ic_action_movie" />
+    </LinearLayout>
+</FrameLayout>

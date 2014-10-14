@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.glassjournalism.glassgenius.StoryListFragment">
+    tools:context="io.glassjournalism.glassgenius.fragments.StoryListFragment">
 
     <ScrollView
         android:id="@+id/scrollView"

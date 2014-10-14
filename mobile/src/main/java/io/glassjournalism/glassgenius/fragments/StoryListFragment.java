@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -12,6 +12,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+
+import io.glassjournalism.glassgenius.R;
 
 
 /**

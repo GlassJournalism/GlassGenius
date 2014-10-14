@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.fragments;
 
 
 import android.app.Activity;
@@ -20,7 +20,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import io.glassjournalism.glassgenius.R;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -193,9 +196,9 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
+            ((TextView) mDrawerListView.getChildAt(mCurrentSelectedPosition).findViewById(R.id.item_text)).setTextAppearance(getActivity(), R.style.NavigationDrawerTextUnselected);
+            ((TextView) mDrawerListView.getChildAt(position).findViewById(R.id.item_text)).setTextAppearance(getActivity(), R.style.NavigationDrawerTextSelected);
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
@@ -203,6 +206,8 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+
+        mCurrentSelectedPosition = position;
     }
 
     @Override

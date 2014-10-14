@@ -1,27 +1,29 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.activities;
 
 import android.app.Activity;
 
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+
+import io.glassjournalism.glassgenius.R;
+import io.glassjournalism.glassgenius.fragments.NavigationDrawerFragment;
+import io.glassjournalism.glassgenius.fragments.PhotoListFragment;
+import io.glassjournalism.glassgenius.fragments.StoryListFragment;
+import io.glassjournalism.glassgenius.fragments.VideoListFragment;
+import io.glassjournalism.glassgenius.views.DrawerIconDrawable;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, StoryListFragment.OnFragmentInteractionListener{
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, StoryListFragment.OnFragmentInteractionListener, PhotoListFragment.OnFragmentInteractionListener, VideoListFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -33,11 +35,17 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 
+    DrawerIconDrawable drawerIconDrawable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getActionBar().setDisplayUseLogoEnabled(true);
+
+        drawerIconDrawable = new DrawerIconDrawable((int) getResources().getDisplayMetrics().density * 56);
+
+        getActionBar().setHomeAsUpIndicator(drawerIconDrawable);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -53,8 +61,26 @@ public class MainActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
+
+        Fragment fragment;
+
+        switch (position) {
+            case 0:
+                fragment = StoryListFragment.newInstance("", "");
+                break;
+            case 1:
+                fragment = PhotoListFragment.newInstance("", "");
+                break;
+            case 2:
+                fragment = VideoListFragment.newInstance("", "");
+                break;
+            default:
+                fragment = StoryListFragment.newInstance("", "");
+                break;
+        }
+
         fragmentManager.beginTransaction()
-                .replace(R.id.container, StoryListFragment.newInstance("", ""))
+                .replace(R.id.container, fragment)
                 .commit();
     }
 

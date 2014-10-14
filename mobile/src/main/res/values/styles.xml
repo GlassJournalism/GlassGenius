@@ -20,4 +20,24 @@
         <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
 
+    <style name="NavigationDrawerTextSelected" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/grey_200</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/grey_800</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+    <style name="NavigationDrawerTextUnselected" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/grey_0</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/grey_800</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
 </resources>

@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -8,18 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import io.glassjournalism.glassgenius.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PhotoListFragment.OnFragmentInteractionListener} interface
+ * {@link VideoListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PhotoListFragment#newInstance} factory method to
+ * Use the {@link VideoListFragment#newInstance} factory method to
  * create an instance of this fragment.
  *
  */
-public class PhotoListFragment extends Fragment {
+public class VideoListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -37,18 +38,18 @@ public class PhotoListFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PhotoListFragment.
+     * @return A new instance of fragment VideoListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PhotoListFragment newInstance(String param1, String param2) {
-        PhotoListFragment fragment = new PhotoListFragment();
+    public static VideoListFragment newInstance(String param1, String param2) {
+        VideoListFragment fragment = new VideoListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-    public PhotoListFragment() {
+    public VideoListFragment() {
         // Required empty public constructor
     }
 
@@ -65,7 +66,7 @@ public class PhotoListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_photo_list, container, false);
+        return inflater.inflate(R.layout.fragment_video_list, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
