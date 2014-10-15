@@ -1,19 +1,27 @@
 package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.percolate.caffeine.DialogUtils;
+import com.percolate.caffeine.ToastUtils;
+import com.percolate.caffeine.ViewUtils;
 
+import butterknife.ButterKnife;
 import io.glassjournalism.glassgenius.R;
+import uk.me.lewisdeane.ldialogs.CustomDialog;
 
 
 /**
@@ -87,10 +95,17 @@ public class StoryListFragment extends Fragment {
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
 
         floatingActionButton.listenToScrollView(scrollView);
-        floatingActionButton.setColor(getResources().getColor(R.color.green_400));
+        floatingActionButton.setColor(getResources().getColor(R.color.light_blue_500));
         floatingActionButton.setDrawable(getResources().getDrawable(R.drawable.ic_action_new));
 
-        for (int i = 0; i < 25; i++) {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showNewStoryDialog();
+            }
+        });
+
+        for (int i = 0; i < 2; i++) {
             addStory("Story " + Integer.toString(i), "Test description");
         }
 
@@ -128,11 +143,54 @@ public class StoryListFragment extends Fragment {
 
         storyTitle.setText(title);
         storyDetails.setText(details);
+
+        newStory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().getFragmentManager().beginTransaction().replace(R.id.container, StoryFragment.newInstance("", ""), "StoryFragment").commit();
+            }
+        });
+
         scrollViewLinearLayout.addView(newStory);
     }
 
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public void showNewStoryDialog() {
+        View dialogView = layoutInflater.inflate(R.layout.dialog_new_story, null);
+        final EditText inputTitle = ButterKnife.findById(dialogView, R.id.storyTitleEditText);
+        final EditText inputDescription = ButterKnife.findById(dialogView, R.id.storyDescriptionEditText);
+        CustomDialog.Builder builder = new CustomDialog.Builder(getActivity(), "Create a new story", "Create");
+        builder.negativeText("Cancel");
+
+        final CustomDialog newDialog = builder.build();
+        newDialog.setCustomView(dialogView)
+                .setClickListener(new CustomDialog.ClickListener() {
+                    @Override
+                    public void onConfirmClick() {
+                        if (inputTitle.getText().length() != 0 && inputDescription.getText().length() != 0) {
+                            addStory(inputTitle.getText().toString(), inputDescription.getText().toString());
+                            newDialog.dismiss();
+                        }
+                        else if (inputTitle.getText().length() == 0 && inputDescription.getText().length() != 0) {
+                            ToastUtils.quickToast(getActivity(), "Please enter a title.");
+                        }
+                        else if (inputTitle.getText().length() != 0 && inputDescription.getText().length() == 0) {
+                            ToastUtils.quickToast(getActivity(), "Please enter a description.");
+                        }
+                        else {
+                            ToastUtils.quickToast(getActivity(), "Please enter a title and description.");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelClick() {
+                        //do nothing
+                    }
+                });
+        newDialog.show();
     }
 
     /**

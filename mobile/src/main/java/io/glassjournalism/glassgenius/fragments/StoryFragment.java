@@ -1,13 +1,30 @@
 package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
+import com.percolate.caffeine.MiscUtils;
+import com.percolate.caffeine.ViewUtils;
+import com.squareup.picasso.Picasso;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import io.glassjournalism.glassgenius.R;
 
 
@@ -29,6 +46,12 @@ public class StoryFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private LayoutInflater inflater;
+    private View view;
+
+    @InjectView(R.id.scrollView) ScrollView scrollView;
+    @InjectView(R.id.scrollViewLinearLayout) LinearLayout scrollViewLinearLayout;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,7 +89,14 @@ public class StoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_story, container, false);
+        this.inflater = inflater;
+        view = inflater.inflate(R.layout.fragment_story, container, false);
+
+        ButterKnife.inject(this, view);
+
+        addSampleCards();
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -93,6 +123,40 @@ public class StoryFragment extends Fragment {
         mListener = null;
     }
 
+    public void addSampleCards() {
+
+        for (int i = 0; i < 10; i++) {
+            View newCard = inflater.inflate(R.layout.card_preview_card, null);
+
+            final ImageView iv = ViewUtils.findViewById(newCard, R.id.cardImage);
+
+            FrameLayout frameLayout = ViewUtils.findViewById(newCard, R.id.cardImageLayout);
+
+            int x = getResources().getDisplayMetrics().widthPixels - MiscUtils.dpToPx(getActivity(), 32);
+            int y = x * 9;
+            y = (int) (((float) y)/16.0f);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(x, y);
+
+            frameLayout.setLayoutParams(lp);
+
+            final WebView wv = new WebView(getActivity());
+
+            wv.setWebChromeClient(new WebChromeClient() {
+                public void onProgressChanged(WebView view, int progress) {
+                    if (progress == 100) {
+                        new Background(wv, iv).execute();
+                        Log.i(getTag(), "WebView done loading card.");
+                    }
+                }
+            });
+
+            wv.loadUrl("http://vinnie.io/sample-card.html");
+
+            scrollViewLinearLayout.addView(newCard);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -106,6 +170,33 @@ public class StoryFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    class Background extends AsyncTask<Void, Void, Bitmap> {
+        ImageView imageView;
+        WebView webView;
+
+        public Background(WebView webView, ImageView imageView) {
+            this.imageView = imageView;
+            this.webView = webView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                Thread.sleep(2000);
+                Bitmap bitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                webView.draw(canvas);
+                return bitmap;
+            } catch (Exception e) { }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
     }
 
 }

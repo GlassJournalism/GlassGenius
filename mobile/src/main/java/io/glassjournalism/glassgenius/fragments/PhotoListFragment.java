@@ -13,6 +13,8 @@ import android.widget.ScrollView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.transform.RoundedTransformation;
 
@@ -41,8 +43,8 @@ public class PhotoListFragment extends Fragment {
     private LayoutInflater inflater;
     private View view;
 
-    private ScrollView scrollView;
-    private LinearLayout scrollViewLinearLayout;
+    @InjectView(R.id.scrollView) ScrollView scrollView;
+    @InjectView(R.id.scrollViewLinearLayout) LinearLayout scrollViewLinearLayout;
 
     private RoundedTransformation roundedTransformation;
 
@@ -84,8 +86,7 @@ public class PhotoListFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_photo_list, container, false);
 
         // Bind views
-        scrollView = (ScrollView) view.findViewById(R.id.scrollView);
-        scrollViewLinearLayout = (LinearLayout) view.findViewById(R.id.scrollViewLinearLayout);
+        ButterKnife.inject(this, view);
 
         roundedTransformation = new RoundedTransformation((int) getResources().getDisplayMetrics().density * 2);
 

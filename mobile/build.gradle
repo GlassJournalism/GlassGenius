@@ -21,10 +21,14 @@ android {
 
 repositories {
     mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'uk.me.lewisdeane.ldialogs:ldialogs@aar'
     compile 'com.android.support:support-v4:20.0.0'
     compile files('libs/cardview-v7-21.0.0-rc1.jar')
     compile 'com.squareup.picasso:picasso:+'
