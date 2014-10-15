@@ -12,6 +12,7 @@
         android:layout_marginLeft="12dp"
         android:layout_marginBottom="8dp"
         android:layout_marginRight="12dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-light"
         android:textColorHighlight="@color/purple_500"/>
 
