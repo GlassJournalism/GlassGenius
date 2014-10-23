@@ -255,7 +255,7 @@ public class StoryFragment extends Fragment {
                         }
 
                         webView.loadUrl("template({" + template + "})");
-                        handleBarsCompletedSe = true;
+                        handleBarsCompleted = true;
                     } else {
                         new Background(webView, cardImage).execute();
                         Log.i(getTag(), "WebView done loading card.");
