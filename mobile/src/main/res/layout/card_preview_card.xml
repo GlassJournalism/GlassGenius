@@ -1,92 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card">
+    android:elevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/titleLinearLayout">
+        android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/cardTitle"
-            android:text="Demonstration Card"
-            android:fontFamily="sans-serif-light"
-            android:layout_margin="16dp"
-            android:textSize="18sp"/>
+            android:orientation="horizontal"
+            android:id="@+id/titleLinearLayout">
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="56dp"
-            android:layout_weight="0"
-            android:id="@+id/cardOverflowButton"
-            android:src="@drawable/ic_action_overflow_dark"
-            android:scaleType="center"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/cardTitle"
+                android:text="Demonstration Card"
+                android:fontFamily="sans-serif-light"
+                android:layout_margin="16dp"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="56dp"
+                android:layout_weight="0"
+                android:id="@+id/cardOverflowButton"
+                android:src="@drawable/ic_action_overflow_dark"
+                android:scaleType="center"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/cardImageLayout">
+
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_gravity="center" />
+
+            <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            android:id="@+id/cardImage"/>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/cardOptionsLinearLayout">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Show 5 trigger phrases"
+                android:textColor="@color/grey_700"
+                android:fontFamily="sans-serif-light"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:padding="16dp"
+                android:id="@+id/triggerWordTitle" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/triggerWordToggle"
+                android:src="@drawable/ic_arrow_drop_down"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="4dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/triggerWordLinearLayout"
+            android:visibility="gone"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"></LinearLayout>
 
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/cardImageLayout">
-
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/progressBar"
-            android:layout_gravity="center" />
-
-        <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitStart"
-        android:id="@+id/cardImage"/>
-
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="16dp"
-        android:paddingLeft="6dp"
-        android:paddingRight="4dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:id="@+id/cardOptionsLinearLayout"
-        android:background="@drawable/rounded_rectangle_grey">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Show trigger phrases"
-            android:textColor="@color/grey_0"
-            android:paddingRight="6dp"
-            android:fontFamily="sans-serif-light" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingRight="4dp"
-            android:paddingLeft="4dp"
-            android:background="@drawable/rounded_rectangle_grey_500"
-            android:textColor="@color/grey_0"
-            android:fontFamily="sans-serif-light" />
-
-    </LinearLayout>
-
-
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

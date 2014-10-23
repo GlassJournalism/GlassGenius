@@ -1,40 +1,33 @@
 package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.widget.ActionMenuView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-
-import io.filepicker.FilePicker;
-import io.filepicker.FilePickerAPI;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
-import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.activities.MainActivity;
-import io.glassjournalism.glassgenius.transform.RoundedTransformation;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PhotoListFragment.OnFragmentInteractionListener} interface
+ * {@link GlassCardCreationFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PhotoListFragment#newInstance} factory method to
+ * Use the {@link GlassCardCreationFragment#newInstance} factory method to
  * create an instance of this fragment.
- *
  */
-public class PhotoListFragment extends Fragment {
+public class GlassCardCreationFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -44,16 +37,14 @@ public class PhotoListFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
-
     private LayoutInflater inflater;
     private View view;
 
-    @InjectView(R.id.scrollView) ScrollView scrollView;
-    @InjectView(R.id.scrollViewLinearLayout) LinearLayout scrollViewLinearLayout;
     @InjectView(R.id.fab) FloatingActionButton floatingActionButton;
 
-    private RoundedTransformation roundedTransformation;
+    @InjectView(R.id.webView) WebView webView;
+
+    private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -61,18 +52,19 @@ public class PhotoListFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PhotoListFragment.
+     * @return A new instance of fragment GlassCardCreationFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PhotoListFragment newInstance(String param1, String param2) {
-        PhotoListFragment fragment = new PhotoListFragment();
+    public static GlassCardCreationFragment newInstance(String param1, String param2) {
+        GlassCardCreationFragment fragment = new GlassCardCreationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
-    public PhotoListFragment() {
+
+    public GlassCardCreationFragment() {
         // Required empty public constructor
     }
 
@@ -90,26 +82,28 @@ public class PhotoListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.inflater = inflater;
-        view = inflater.inflate(R.layout.fragment_photo_list, container, false);
+        view = inflater.inflate(R.layout.fragment_glass_card_creation, container, false);
 
-        // Bind views
         ButterKnife.inject(this, view);
 
-        floatingActionButton.setDrawable(getResources().getDrawable(R.drawable.ic_action_new));
-        floatingActionButton.setColor(getResources().getColor(R.color.pink_a400));
+        floatingActionButton.setColor(getResources().getColor(R.color.green_a700));
+        floatingActionButton.setDrawable(getResources().getDrawable(R.drawable.ic_check));
+
+        int widthPixels = getResources().getDisplayMetrics().widthPixels;
+        LinearLayout.LayoutParams webViewLayoutParams = new LinearLayout.LayoutParams(widthPixels, (int) ((float)(9.f/16.f) * (float) widthPixels));
+
+        webView.setLayoutParams(webViewLayoutParams);
+        webView.setInitialScale(169);
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.loadUrl("http://vinnie.io/sample-card.html");
+
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).pickPhoto();
+                ((MainActivity)getActivity()).onBackPressed();
             }
         });
 
-
-        roundedTransformation = new RoundedTransformation((int) getResources().getDisplayMetrics().density * 2);
-
-        for (int i = 0; i < 10; i++) {
-            addTestPhoto();
-        }
 
         return view;
     }
@@ -138,20 +132,12 @@ public class PhotoListFragment extends Fragment {
         mListener = null;
     }
 
-    public void addTestPhoto() {
-        View newPhoto = inflater.inflate(R.layout.photo_card, null);
-
-        Picasso.with(this.getActivity()).load(R.drawable.placeholder_photo).transform(roundedTransformation).into((ImageView) newPhoto.findViewById(R.id.imageView));
-
-        scrollViewLinearLayout.addView(newPhoto);
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
@@ -160,4 +146,5 @@ public class PhotoListFragment extends Fragment {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
+
 }

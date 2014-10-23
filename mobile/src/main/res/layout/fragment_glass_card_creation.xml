@@ -1,0 +1,101 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="io.glassjournalism.glassgenius.fragments.GlassCardCreationFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey_200">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent">
+
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:id="@+id/webView"
+                android:layout_gravity="center_horizontal|top"
+                android:elevation="2dp" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:background="@color/light_blue_500">
+
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:id="@+id/spinner"
+                            android:spinnerMode="dropdown"
+                            android:entries="@array/glass_template_spinner_array"
+                            android:prompt="@string/template_spinner_prompt"
+                            style="@style/TemplateSpinnerStyle"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="80dp"
+                            android:layout_gravity="bottom" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="Template"
+                            android:id="@+id/textView3"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="8dp"
+                            android:textSize="12sp" />
+                    </FrameLayout>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:id="@+id/editText"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:hint="Title"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:ems="10"
+                        android:id="@+id/editText2"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginRight="16dp"
+                        android:hint="Body"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <com.faizmalkani.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="right|top"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
+                    android:elevation="4dp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

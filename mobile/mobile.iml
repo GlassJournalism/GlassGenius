@@ -79,18 +79,19 @@
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="cardview-v7-21.0.0" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.3.4" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.7.0" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-21.0.0-rc1" level="project" />
-    <orderEntry type="library" exported="" name="ldialogs" level="project" />
     <orderEntry type="library" exported="" name="caffeine-0.3.1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="butterknife-5.1.2" level="project" />
     <orderEntry type="library" exported="" name="1_butterknife-5.1.2" level="project" />
+    <orderEntry type="module" module-name="filepicker-library" exported="" />
   </component>
 </module>
 

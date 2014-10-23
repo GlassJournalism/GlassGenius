@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="colorPrimary">@color/light_blue_500</color>
+    <color name="colorPrimaryDark">@color/light_blue_700</color>
+
     <!-- RED -->
     <color name="red_50">#fde0dc</color>
     <color name="red_100">#f9bdbb</color>

@@ -1,30 +1,51 @@
 package io.glassjournalism.glassgenius.activities;
 
-import android.app.Activity;
-
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.webkit.MimeTypeMap;
 
+
+import java.io.File;
+import java.net.URL;
+
+import io.filepicker.FilePicker;
+import io.filepicker.FilePickerAPI;
+import io.glassjournalism.glassgenius.FilePickerImageResponse;
 import io.glassjournalism.glassgenius.R;
+import io.glassjournalism.glassgenius.fragments.GlassCardCreationFragment;
 import io.glassjournalism.glassgenius.fragments.NavigationDrawerFragment;
 import io.glassjournalism.glassgenius.fragments.PhotoListFragment;
 import io.glassjournalism.glassgenius.fragments.StoryFragment;
 import io.glassjournalism.glassgenius.fragments.StoryListFragment;
 import io.glassjournalism.glassgenius.fragments.VideoListFragment;
-import io.glassjournalism.glassgenius.views.DrawerIconDrawable;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.mime.TypedFile;
 
 
-public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, StoryListFragment.OnFragmentInteractionListener, StoryFragment.OnFragmentInteractionListener, PhotoListFragment.OnFragmentInteractionListener, VideoListFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, StoryListFragment.OnFragmentInteractionListener, StoryFragment.OnFragmentInteractionListener, PhotoListFragment.OnFragmentInteractionListener, VideoListFragment.OnFragmentInteractionListener, GlassCardCreationFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -36,26 +57,45 @@ public class MainActivity extends Activity
      */
     private CharSequence mTitle;
 
-    DrawerIconDrawable drawerIconDrawable;
+    Toolbar toolbar;
+
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle drawerToggle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        drawerIconDrawable = new DrawerIconDrawable((int) getResources().getDisplayMetrics().density * 56);
-
-        getActionBar().setHomeAsUpIndicator(drawerIconDrawable);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getActionBar().setHomeAsUpIndicator(drawerArrowDrawable);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
 
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+                drawerLayout);
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name) {};
+
+        drawerLayout.setDrawerListener(drawerToggle);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        FilePickerAPI.setKey(FILEPICKER_API_KEY);
     }
 
     @Override
@@ -100,8 +140,8 @@ public class MainActivity extends Activity
     }
 
     public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(android.support.v7.app.ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
@@ -140,4 +180,70 @@ public class MainActivity extends Activity
 
     }
 
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    public void pickPhoto() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && data != null && data.getData() != null) {
+            Log.i("GLASSGENIUS", "Intent response captured!");
+
+            Uri selectedImage = data.getData();
+
+            Log.i("GlassGenius", selectedImage.toString());
+
+            File file = new File(selectedImage.toString());
+
+            ContentResolver contentResolver = this.getContentResolver();
+            String mimeType = contentResolver.getType(Uri.fromFile(file));
+
+            TypedFile typedFile = new TypedFile(mimeType, file);
+
+            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://www.filepicker.io").build();
+
+            FilePickerService service = restAdapter.create(FilePickerService.class);
+
+            service.postPhoto(typedFile, new Callback<FilePickerImageResponse>() {
+
+                @Override
+                public void success(FilePickerImageResponse filePickerImageResponse, Response response) {
+                    Log.i("GlassGenius", filePickerImageResponse.getUrl());
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("GlassGenius", "Upload failed!");
+                }
+            });
+        }
+    }
+
+    public interface FilePickerService {
+        void postPhoto(@Part("fileUpload") TypedFile uri, Callback<FilePickerImageResponse> cb);
+    }
 }

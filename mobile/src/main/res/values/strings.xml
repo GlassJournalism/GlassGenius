@@ -11,5 +11,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_example">Example action</string>
+
+    <string name="template_spinner_prompt">Select a template</string>
+
+    <string-array name="glass_template_spinner_array">
+        <item>Text only</item>
+        <item>Text and photo</item>
+        <item>Photo only</item>
+        <item>Video</item>
+    </string-array>
 
 </resources>

@@ -19,9 +19,16 @@ import com.percolate.caffeine.DialogUtils;
 import com.percolate.caffeine.ToastUtils;
 import com.percolate.caffeine.ViewUtils;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import io.glassjournalism.glassgenius.R;
-import uk.me.lewisdeane.ldialogs.CustomDialog;
+import io.glassjournalism.glassgenius.json.Category;
+import io.glassjournalism.glassgenius.json.CategoryService;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -95,7 +102,7 @@ public class StoryListFragment extends Fragment {
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
 
         floatingActionButton.listenToScrollView(scrollView);
-        floatingActionButton.setColor(getResources().getColor(R.color.light_blue_500));
+        floatingActionButton.setColor(getResources().getColor(R.color.pink_a400));
         floatingActionButton.setDrawable(getResources().getDrawable(R.drawable.ic_action_new));
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -105,9 +112,7 @@ public class StoryListFragment extends Fragment {
             }
         });
 
-        for (int i = 0; i < 2; i++) {
-            addStory("Story " + Integer.toString(i), "Test description");
-        }
+        loadStories();
 
         return view;
     }
@@ -147,7 +152,7 @@ public class StoryListFragment extends Fragment {
         newStory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getFragmentManager().beginTransaction().replace(R.id.container, StoryFragment.newInstance("", ""), "StoryFragment").commit();
+                getActivity().getFragmentManager().beginTransaction().replace(R.id.container, StoryFragment.newInstance("", ""), "StoryFragment").addToBackStack("StoryListFragment").commit();
             }
         });
 
@@ -159,38 +164,64 @@ public class StoryListFragment extends Fragment {
     }
 
     public void showNewStoryDialog() {
-        View dialogView = layoutInflater.inflate(R.layout.dialog_new_story, null);
-        final EditText inputTitle = ButterKnife.findById(dialogView, R.id.storyTitleEditText);
-        final EditText inputDescription = ButterKnife.findById(dialogView, R.id.storyDescriptionEditText);
-        CustomDialog.Builder builder = new CustomDialog.Builder(getActivity(), "Create a new story", "Create");
-        builder.negativeText("Cancel");
+//        View dialogView = layoutInflater.inflate(R.layout.dialog_new_story, null);
+//        final EditText inputTitle = ButterKnife.findById(dialogView, R.id.storyTitleEditText);
+//        final EditText inputDescription = ButterKnife.findById(dialogView, R.id.storyDescriptionEditText);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//            }
+//        });
+//
+//        builder.setView(dialogView);
+//        final CustomDialog newDialog = builder.build();
+//        newDialog.setCustomView(dialogView)
+//                .setClickListener(new CustomDialog.ClickListener() {
+//                    @Override
+//                    public void onConfirmClick() {
+//                        if (inputTitle.getText().length() != 0 && inputDescription.getText().length() != 0) {
+//                            addStory(inputTitle.getText().toString(), inputDescription.getText().toString());
+//                            newDialog.dismiss();
+//                        }
+//                        else if (inputTitle.getText().length() == 0 && inputDescription.getText().length() != 0) {
+//                            ToastUtils.quickToast(getActivity(), "Please enter a title.");
+//                        }
+//                        else if (inputTitle.getText().length() != 0 && inputDescription.getText().length() == 0) {
+//                            ToastUtils.quickToast(getActivity(), "Please enter a description.");
+//                        }
+//                        else {
+//                            ToastUtils.quickToast(getActivity(), "Please enter a title and description.");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelClick() {
+//                        //do nothing
+//                    }
+//                });
+//        newDialog.show();
+    }
 
-        final CustomDialog newDialog = builder.build();
-        newDialog.setCustomView(dialogView)
-                .setClickListener(new CustomDialog.ClickListener() {
-                    @Override
-                    public void onConfirmClick() {
-                        if (inputTitle.getText().length() != 0 && inputDescription.getText().length() != 0) {
-                            addStory(inputTitle.getText().toString(), inputDescription.getText().toString());
-                            newDialog.dismiss();
-                        }
-                        else if (inputTitle.getText().length() == 0 && inputDescription.getText().length() != 0) {
-                            ToastUtils.quickToast(getActivity(), "Please enter a title.");
-                        }
-                        else if (inputTitle.getText().length() != 0 && inputDescription.getText().length() == 0) {
-                            ToastUtils.quickToast(getActivity(), "Please enter a description.");
-                        }
-                        else {
-                            ToastUtils.quickToast(getActivity(), "Please enter a title and description.");
-                        }
-                    }
 
-                    @Override
-                    public void onCancelClick() {
-                        //do nothing
-                    }
-                });
-        newDialog.show();
+    public void loadStories() {
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
+        CategoryService categoryService = restAdapter.create(CategoryService.class);
+        categoryService.getCategories(new Callback<List<Category>>() {
+
+            @Override
+            public void success(List<Category> categories, Response response) {
+                for (int i = 0; i < categories.size(); i++) {
+                    addStory(categories.get(i).getName(), "");
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     /**
