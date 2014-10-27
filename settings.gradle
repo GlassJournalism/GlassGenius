@@ -1,2 +1,1 @@
-include ':mobile', ':glass', ':filepicker-library'
-project(':filepicker-library').projectDir = new File('filepicker-android/filepicker-library')
+include ':mobile', ':glass', ':genius-lib', ':filepicker-library'

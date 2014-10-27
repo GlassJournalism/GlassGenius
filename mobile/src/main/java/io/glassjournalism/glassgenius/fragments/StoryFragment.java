@@ -1,20 +1,18 @@
 package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.ActionMenuView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,18 +22,15 @@ import android.widget.TextView;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.percolate.caffeine.MiscUtils;
 import com.percolate.caffeine.ViewUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.glassjournalism.glassgenius.R;
-import io.glassjournalism.glassgenius.json.Card;
-import io.glassjournalism.glassgenius.json.CardService;
-import io.glassjournalism.glassgenius.json.Category;
-import io.glassjournalism.glassgenius.json.CategoryService;
-import io.glassjournalism.glassgenius.json.Variables;
+import io.glassjournalism.glassgenius.data.json.Card;
+import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
+import io.glassjournalism.glassgenius.data.json.Variables;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -302,8 +297,8 @@ public class StoryFragment extends Fragment {
 
     public void loadCards() {
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
-        CardService cardService = restAdapter.create(CardService.class);
-        cardService.getCards(new Callback<List<Card>>() {
+        GlassGeniusAPI glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
+        glassGeniusAPI.getCards(new Callback<List<Card>>() {
 
             @Override
             public void success(List<Card> cards, Response response) {
