@@ -2,31 +2,23 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="72dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/story_list_item_selector"
     android:clickable="true">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Story Item"
         android:id="@+id/storyTitle"
         android:layout_gravity="center_vertical|left"
         android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
         android:textSize="16sp"
-        android:paddingBottom="4dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="12 items"
-        android:id="@+id/storyDetails"
         android:paddingLeft="16dp"
-        android:paddingBottom="16dp"
-        android:textSize="14sp"
-        android:paddingRight="16sp" />
+        android:paddingRight="16dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textColor="@color/grey_800" />
+
 </LinearLayout>

@@ -10,8 +10,7 @@
         android:id="@+id/scrollView"
         android:clipToPadding="false"
         android:paddingTop="16dp"
-        android:paddingBottom="18dp"
-        android:background="@color/grey_200">
+        android:paddingBottom="18dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,6 +24,7 @@
 
         </LinearLayout>
     </ScrollView>
+
 
     <com.faizmalkani.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

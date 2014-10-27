@@ -50,6 +50,8 @@ public class StoryListFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private boolean hasStories = false;
+
     private OnFragmentInteractionListener mListener;
 
     private LayoutInflater layoutInflater;
@@ -141,13 +143,17 @@ public class StoryListFragment extends Fragment {
         mListener = null;
     }
 
-    public void addStory(String title, String details) {
+    public void addStory(String title) {
+
+        if (!hasStories) {
+            scrollView.setBackgroundColor(getResources().getColor(R.color.grey_0));
+            hasStories = true;
+        }
+
         View newStory = layoutInflater.inflate(R.layout.story_list_item, null);
         TextView storyTitle = (TextView) newStory.findViewById(R.id.storyTitle);
-        TextView storyDetails = (TextView) newStory.findViewById(R.id.storyDetails);
 
         storyTitle.setText(title);
-        storyDetails.setText(details);
 
         newStory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,8 +218,9 @@ public class StoryListFragment extends Fragment {
 
             @Override
             public void success(List<Category> categories, Response response) {
+
                 for (int i = 0; i < categories.size(); i++) {
-                    addStory(categories.get(i).getName(), "");
+                    addStory(categories.get(i).getName());
                 }
             }
 
