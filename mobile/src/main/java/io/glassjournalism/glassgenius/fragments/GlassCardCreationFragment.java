@@ -1,15 +1,14 @@
 package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.widget.ActionMenuView;
 import android.widget.LinearLayout;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;

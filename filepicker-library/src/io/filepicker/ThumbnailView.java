@@ -1,12 +1,12 @@
 package io.filepicker;
 
-import java.util.concurrent.RejectedExecutionException;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
+
+import java.util.concurrent.RejectedExecutionException;
 
 
 public class ThumbnailView extends android.widget.ImageView {

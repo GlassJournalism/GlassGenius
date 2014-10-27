@@ -1,7 +1,5 @@
 package io.filepicker;
 
-import io.filepicker.R;
-
 import android.graphics.Bitmap;
 
 public class Inode {

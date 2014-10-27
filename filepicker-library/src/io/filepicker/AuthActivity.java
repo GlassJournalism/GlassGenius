@@ -1,18 +1,15 @@
 package io.filepicker;
 
-import io.filepicker.R;
-
-import android.app.ActionBar;
-import android.os.Bundle;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.support.v4.app.NavUtils;
 
 public class AuthActivity extends Activity {
     private String service;
