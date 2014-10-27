@@ -1,30 +1,23 @@
 package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
-import com.percolate.caffeine.DialogUtils;
-import com.percolate.caffeine.ToastUtils;
-import com.percolate.caffeine.ViewUtils;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import io.glassjournalism.glassgenius.R;
-import io.glassjournalism.glassgenius.json.Category;
-import io.glassjournalism.glassgenius.json.CategoryService;
+import io.glassjournalism.glassgenius.data.json.Category;
+import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -213,8 +206,8 @@ public class StoryListFragment extends Fragment {
 
     public void loadStories() {
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
-        CategoryService categoryService = restAdapter.create(CategoryService.class);
-        categoryService.getCategories(new Callback<List<Category>>() {
+        GlassGeniusAPI glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
+        glassGeniusAPI.getCategories(new Callback<List<Category>>() {
 
             @Override
             public void success(List<Category> categories, Response response) {

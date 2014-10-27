@@ -1,19 +1,15 @@
 package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-
-import io.filepicker.FilePicker;
-import io.filepicker.FilePickerAPI;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;

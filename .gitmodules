@@ -1,6 +1,3 @@
 [submodule "FloatingActionButton"]
 	path = FloatingActionButton
 	url = git@github.com:FaizMalkani/FloatingActionButton
-[submodule "filepicker-android"]
-	path = filepicker-android
-	url = git@github.com:Ink/filepicker-android

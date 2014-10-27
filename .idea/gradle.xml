@@ -8,7 +8,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/filepicker-android/filepicker-library" />
+            <option value="$PROJECT_DIR$/filepicker-library" />
+            <option value="$PROJECT_DIR$/genius-lib" />
             <option value="$PROJECT_DIR$/glass" />
             <option value="$PROJECT_DIR$/mobile" />
           </set>

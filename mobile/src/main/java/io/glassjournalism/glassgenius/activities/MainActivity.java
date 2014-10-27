@@ -5,27 +5,18 @@ import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.support.v4.widget.DrawerLayout;
-import android.webkit.MimeTypeMap;
-
 
 import java.io.File;
-import java.net.URL;
 
-import io.filepicker.FilePicker;
 import io.filepicker.FilePickerAPI;
 import io.glassjournalism.glassgenius.FilePickerImageResponse;
 import io.glassjournalism.glassgenius.R;
