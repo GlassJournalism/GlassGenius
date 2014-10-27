@@ -3,12 +3,14 @@ package io.glassjournalism.glassgenius.data.json;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.http.POST;
+import retrofit.http.GET;
+import retrofit.http.Path;
+import retrofit.http.Query;
 
 public interface GlassGeniusAPI {
-    @POST("/category")
+    @GET("/category")
     void getCategories(Callback<List<Category>> categories);
 
-    @POST("/card")
-    void getCards(Callback<List<Card>> card);
+    @GET("/card")
+    void getCards(Callback<List<GeniusCard>> card);
 }

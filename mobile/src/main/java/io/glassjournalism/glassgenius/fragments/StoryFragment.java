@@ -28,7 +28,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.glassjournalism.glassgenius.R;
-import io.glassjournalism.glassgenius.data.json.Card;
+import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import io.glassjournalism.glassgenius.data.json.Variables;
 import retrofit.Callback;
@@ -183,8 +183,7 @@ public class StoryFragment extends Fragment {
         }
     }
 
-    public void addCard(Card new_card) {
-        final Card card = new_card;
+    public void addCard(final GeniusCard geniusCard) {
         View view = inflater.inflate(R.layout.card_preview_card, null);
         TextView title = (TextView) view.findViewById(R.id.cardTitle);
         final ImageView cardImage = (ImageView) view.findViewById(R.id.cardImage);
@@ -200,14 +199,14 @@ public class StoryFragment extends Fragment {
 
         cardImageLayout.setLayoutParams(layoutParams);
 
-        title.setText(card.getName());
+        title.setText(geniusCard.getName());
 
         String mime = "text/html";
         String encoding = "utf-8";
 
         WebView webView = new WebView(getActivity());
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadDataWithBaseURL(null, card.getTemplate().getHandlebarsTemplate(), mime, encoding, null);
+        webView.loadDataWithBaseURL(null, geniusCard.getTemplate().getHandlebarsTemplate(), mime, encoding, null);
 
         webView.setWebChromeClient(new WebChromeClient() {
             boolean handleBarsCompleted = false;
@@ -216,7 +215,7 @@ public class StoryFragment extends Fragment {
                 if (progress == 100) {
                     if (!handleBarsCompleted) {
                         String template = "";
-                        Variables variables = card.getVariables();
+                        Variables variables = geniusCard.getVariables();
                         if (!variables.getBackgroundImage().equals("")) {
                             template += "BackgroundImage\": \"" + variables.getBackgroundImage() + "\"";
                         }
@@ -259,7 +258,7 @@ public class StoryFragment extends Fragment {
             }
         });
 
-        List<String> triggerWords = card.getTriggerWords();
+        List<String> triggerWords = geniusCard.getTriggerWords();
 
         if (triggerWords.size() == 1 && triggerWords.get(0).equals("")) {
             triggerWordTitle.setText("No trigger words");
@@ -298,12 +297,12 @@ public class StoryFragment extends Fragment {
     public void loadCards() {
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
         GlassGeniusAPI glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
-        glassGeniusAPI.getCards(new Callback<List<Card>>() {
+        glassGeniusAPI.getCards(new Callback<List<GeniusCard>>() {
 
             @Override
-            public void success(List<Card> cards, Response response) {
-                for (int i = 0; i < cards.size(); i++) {
-                    addCard(cards.get(i));
+            public void success(List<GeniusCard> geniusCards, Response response) {
+                for (int i = 0; i < geniusCards.size(); i++) {
+                    addCard(geniusCards.get(i));
                 }
             }
 

@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Card {
+public class GeniusCard {
 
     @Expose
     private String category;
@@ -32,7 +32,7 @@ public class Card {
         this.category = category;
     }
 
-    public Card withCategory(String category) {
+    public GeniusCard withCategory(String category) {
         this.category = category;
         return this;
     }
@@ -45,7 +45,7 @@ public class Card {
         this.template = template;
     }
 
-    public Card withTemplate(Template template) {
+    public GeniusCard withTemplate(Template template) {
         this.template = template;
         return this;
     }
@@ -58,7 +58,7 @@ public class Card {
         this.name = name;
     }
 
-    public Card withName(String name) {
+    public GeniusCard withName(String name) {
         this.name = name;
         return this;
     }
@@ -71,7 +71,7 @@ public class Card {
         this.variables = variables;
     }
 
-    public Card withVariables(Variables variables) {
+    public GeniusCard withVariables(Variables variables) {
         this.variables = variables;
         return this;
     }
@@ -84,7 +84,7 @@ public class Card {
         this.triggerWords = triggerWords;
     }
 
-    public Card withTriggerWords(List<String> triggerWords) {
+    public GeniusCard withTriggerWords(List<String> triggerWords) {
         this.triggerWords = triggerWords;
         return this;
     }
@@ -97,7 +97,7 @@ public class Card {
         this.createdAt = createdAt;
     }
 
-    public Card withCreatedAt(String createdAt) {
+    public GeniusCard withCreatedAt(String createdAt) {
         this.createdAt = createdAt;
         return this;
     }
@@ -110,7 +110,7 @@ public class Card {
         this.updatedAt = updatedAt;
     }
 
-    public Card withUpdatedAt(String updatedAt) {
+    public GeniusCard withUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }
@@ -123,7 +123,7 @@ public class Card {
         this.id = id;
     }
 
-    public Card withId(String id) {
+    public GeniusCard withId(String id) {
         this.id = id;
         return this;
     }
