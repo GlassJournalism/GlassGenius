@@ -5,4 +5,4 @@
         android:toXDelta="100%p"
         android:duration="@string/file_picker_animation_duration"
     />
-</set><!-- From: file:/home/david/android-studio-projects/GlassGenius/filepicker-library/res/anim/right_slide_in_back.xml -->
+</set><!-- From: file:/Users/ian/GlassGenius/filepicker-library/res/anim/right_slide_in_back.xml -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/home/david/android-studio-projects/GlassGenius/filepicker-library/build/intermediates/bundles/debug/res/values/values.xml -->
+    <!-- From: file:/Users/ian/GlassGenius/filepicker-library/build/intermediates/bundles/debug/res/values/values.xml -->
     <eat-comment/>
     <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_medium">8dp</dimen>

@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <ListView
         android:id="@+id/listView1"
@@ -34,4 +33,4 @@
         android:layout_centerVertical="true" />
 
 </RelativeLayout>
-<!-- From: file:/home/david/android-studio-projects/GlassGenius/filepicker-library/res/layout/activity_file_picker.xml --><!-- From: file:/home/david/android-studio-projects/GlassGenius/filepicker-library/build/intermediates/bundles/debug/res/layout/activity_file_picker.xml -->
+<!-- From: file:/Users/ian/GlassGenius/filepicker-library/res/layout/activity_file_picker.xml --><!-- From: file:/Users/ian/GlassGenius/filepicker-library/build/intermediates/bundles/debug/res/layout/activity_file_picker.xml -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/home/david/android-studio-projects/GlassGenius/filepicker-library/build/intermediates/bundles/debug/res/values-v14/values.xml -->
+    <!-- From: file:/Users/ian/GlassGenius/filepicker-library/build/intermediates/bundles/debug/res/values-v14/values.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"/>
 </resources>
