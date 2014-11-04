@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
@@ -27,6 +26,11 @@ public class GeniusCardAdapter extends CardScrollAdapter {
         this.mActivity = activity;
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
         glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
+    }
+
+    public void addCard(GeniusCard card) {
+        cardList.add(0, card);
+        notifyDataSetChanged();
     }
 
     @Override
