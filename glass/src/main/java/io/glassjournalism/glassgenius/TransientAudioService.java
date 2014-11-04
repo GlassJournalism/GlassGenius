@@ -23,7 +23,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onCreate() {
-        super.onCreate();
+        Log.d(TAG, "onCreate");
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizer.setRecognitionListener(this);
     }
@@ -41,18 +41,15 @@ public class TransientAudioService extends Service implements RecognitionListene
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public IBinder onBind(Intent intent) {
+        Log.d(TAG, "onBind");
         mRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         mRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
                 this.getPackageName());
         mSpeechRecognizer.startListening(mRecognizerIntent);
-        return START_STICKY;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
         return mBinder;
     }
 
@@ -115,6 +112,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                 Log.d(TAG, "ERROR_SPEECH_TIMEOUT");
                 break;
         }
+        restartSpeech();
     }
 
     @Override
@@ -124,11 +122,15 @@ public class TransientAudioService extends Service implements RecognitionListene
         }
 
         List<String> stringList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        Log.d(TAG, "onResults: " + stringList);
+        Log.i(TAG, "onResults: " + stringList);
 
+        restartSpeech();
+    }
+
+    private void restartSpeech() {
         mSpeechRecognizer.startListening(mRecognizerIntent);
 
-        if(mTimer == null) {
+        if (mTimer == null) {
             mTimer = new CountDownTimer(2000, 500) {
                 @Override
                 public void onTick(long l) {
@@ -146,8 +148,10 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onPartialResults(Bundle bundle) {
-        List<String> stringList = bundle.getStringArrayList(RecognizerIntent.EXTRA_PARTIAL_RESULTS);
-        Log.d(TAG, "onPartialResults" + stringList);
+        List<String> stringList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        if (stringList.size() > 0) {
+            Log.i(TAG, "onPartialResults" + stringList);
+        }
     }
 
     @Override

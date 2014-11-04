@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.google.android.glass.widget.CardScrollView;
 
@@ -32,7 +33,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller = new CardScrollView(this);
         setContentView(mCardScroller);
 
@@ -74,6 +75,7 @@ public class MainActivity extends Activity {
         }
     }
     private void doBindService() {
+        Log.d(TAG, "doBindService");
         bindService(new Intent(this,
                 TransientAudioService.class), mConnection, Context.BIND_AUTO_CREATE);
         mIsBound = true;
