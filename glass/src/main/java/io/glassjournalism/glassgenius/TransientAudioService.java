@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -17,6 +18,8 @@ public class TransientAudioService extends Service implements RecognitionListene
     private final String TAG = getClass().getName();
     private final IBinder mBinder = new TransientAudioBinder();
     private SpeechRecognizer mSpeechRecognizer;
+    private Intent mRecognizerIntent;
+    private CountDownTimer mTimer;
 
     @Override
     public void onCreate() {
@@ -28,6 +31,9 @@ public class TransientAudioService extends Service implements RecognitionListene
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
         mSpeechRecognizer.setRecognitionListener(null);
         mSpeechRecognizer.stopListening();
         mSpeechRecognizer.cancel();
@@ -36,8 +42,12 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Intent recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        mSpeechRecognizer.startListening(recognizerIntent);
+        mRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.getPackageName());
+        mSpeechRecognizer.startListening(mRecognizerIntent);
         return START_STICKY;
     }
 
@@ -49,6 +59,9 @@ public class TransientAudioService extends Service implements RecognitionListene
     @Override
     public void onReadyForSpeech(Bundle bundle) {
         Log.d(TAG, "onReadyForSpeech");
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
     }
 
     @Override
@@ -106,8 +119,29 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onResults(Bundle bundle) {
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
+
         List<String> stringList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         Log.d(TAG, "onResults: " + stringList);
+
+        mSpeechRecognizer.startListening(mRecognizerIntent);
+
+        if(mTimer == null) {
+            mTimer = new CountDownTimer(2000, 500) {
+                @Override
+                public void onTick(long l) {
+                }
+
+                @Override
+                public void onFinish() {
+                    mSpeechRecognizer.cancel();
+                    mSpeechRecognizer.startListening(mRecognizerIntent);
+                }
+            };
+        }
+        mTimer.start();
     }
 
     @Override
