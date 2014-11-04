@@ -15,15 +15,16 @@ import com.google.android.glass.widget.CardScrollView;
 import java.util.List;
 
 import io.glassjournalism.glassgenius.data.json.GeniusCard;
+import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements GeniusCardListener {
 
-    private final String TAG = getClass().getName();
+    private final String TAG = "MainActivity";
     private CardScrollView mCardScroller;
     private GeniusCardAdapter geniusCardAdapter;
     private GlassGeniusAPI glassGeniusAPI;
@@ -74,6 +75,7 @@ public class MainActivity extends Activity {
             mIsBound = false;
         }
     }
+
     private void doBindService() {
         Log.d(TAG, "doBindService");
         bindService(new Intent(this,
@@ -85,6 +87,7 @@ public class MainActivity extends Activity {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mAudioService = ((TransientAudioService.TransientAudioBinder) service).getService();
             Log.d(TAG, "service Connected");
+            mAudioService.setCardListener(MainActivity.this);
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -93,4 +96,10 @@ public class MainActivity extends Activity {
     };
 
 
+    @Override
+    public void onCardFound(GeniusCard card) {
+        if (mCardScroller.isActivated()) {
+            geniusCardAdapter.addCard(card);
+        }
+    }
 }

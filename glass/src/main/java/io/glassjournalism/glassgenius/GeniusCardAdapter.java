@@ -28,6 +28,11 @@ public class GeniusCardAdapter extends CardScrollAdapter {
         glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
     }
 
+    public void addCard(GeniusCard card) {
+        cardList.add(0, card);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return cardList.size();

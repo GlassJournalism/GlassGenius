@@ -9,9 +9,18 @@ import android.os.IBinder;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.List;
+
+import io.glassjournalism.glassgenius.data.json.GeniusCard;
+import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
+import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class TransientAudioService extends Service implements RecognitionListener {
 
@@ -20,12 +29,20 @@ public class TransientAudioService extends Service implements RecognitionListene
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mRecognizerIntent;
     private CountDownTimer mTimer;
+    private GlassGeniusAPI glassGeniusAPI;
+    private GeniusCardListener mGeniusCardListener;
+
+    public void setCardListener(GeniusCardListener listener) {
+        mGeniusCardListener = listener;
+    }
 
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate");
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizer.setRecognitionListener(this);
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
+        glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
     }
 
     @Override
@@ -121,8 +138,22 @@ public class TransientAudioService extends Service implements RecognitionListene
             mTimer.cancel();
         }
 
-        List<String> stringList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        Log.i(TAG, "onResults: " + stringList);
+        List<String> wordList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        Log.i(TAG, "onResults: " + wordList);
+        String words = TextUtils.join(",", wordList);
+        glassGeniusAPI.findCard(words, new Callback<GeniusCard>() {
+            @Override
+            public void success(GeniusCard geniusCard, Response response) {
+                if (null != mGeniusCardListener) {
+                    mGeniusCardListener.onCardFound(geniusCard);
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, "findCard failure");
+            }
+        });
 
         restartSpeech();
     }
