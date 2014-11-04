@@ -4,8 +4,6 @@ import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.GET;
-import retrofit.http.Path;
-import retrofit.http.Query;
 
 public interface GlassGeniusAPI {
     @GET("/category")
