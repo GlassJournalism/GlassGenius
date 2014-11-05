@@ -1,11 +1,25 @@
 apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
+    }
+
+    dependencies {
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+    }
+}
 
 repositories {
     jcenter()
+    maven { url 'http://download.crashlytics.com/maven' }
     flatDir {
         dirs 'prebuilt-libs'
     }
 }
+
 
 android {
     compileSdkVersion "Google Inc.:Glass Development Kit Preview:19"
@@ -30,5 +44,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.squareup.picasso:picasso:+'
     compile 'com.jakewharton:butterknife:5.+'
+    compile 'com.crashlytics.android:crashlytics:1.+'
     compile project(':genius-lib')
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.glassjournalism.glassgenius" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="io.glassjournalism.glassgenius">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -8,11 +9,12 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:label="@string/app_name_mobile"
+        android:theme="@style/AppTheme"
+        tools:replace="android:label">
         <activity
             android:name="io.glassjournalism.glassgenius.activities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name_mobile">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,9 +23,9 @@
         </activity>
 
         <!--<activity android:name="io.filepicker.FilePicker"-->
-            <!--android:label="File Picker" />-->
+        <!--android:label="File Picker" />-->
         <!--<activity android:name="io.filepicker.AuthActivity"-->
-            <!--android:label="File Picker Authorization" />-->
+        <!--android:label="File Picker Authorization" />-->
     </application>
 
 </manifest>

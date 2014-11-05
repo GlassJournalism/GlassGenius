@@ -10,18 +10,14 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.glass.widget.CardScrollView;
-
-import java.util.List;
 
 import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
-import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MainActivity extends Activity implements GeniusCardListener {
 
@@ -35,12 +31,14 @@ public class MainActivity extends Activity implements GeniusCardListener {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        Crashlytics.start(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller = new CardScrollView(this);
         setContentView(mCardScroller);
 
         geniusCardAdapter = new GeniusCardAdapter(MainActivity.this);
         mCardScroller.setAdapter(geniusCardAdapter);
+
 
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
 //        glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
