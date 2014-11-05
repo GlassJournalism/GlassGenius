@@ -14,6 +14,7 @@ import android.util.Log;
 
 import java.util.List;
 
+import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
@@ -41,7 +42,7 @@ public class TransientAudioService extends Service implements RecognitionListene
         Log.d(TAG, "onCreate");
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizer.setRecognitionListener(this);
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
         glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
     }
 
@@ -144,6 +145,7 @@ public class TransientAudioService extends Service implements RecognitionListene
         glassGeniusAPI.findCard(words, new Callback<GeniusCard>() {
             @Override
             public void success(GeniusCard geniusCard, Response response) {
+                Log.d(TAG, "response: " + response.getUrl() + " " + response.getReason());
                 if (null != mGeniusCardListener) {
                     mGeniusCardListener.onCardFound(geniusCard);
                 }
@@ -151,6 +153,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
             @Override
             public void failure(RetrofitError error) {
+                Log.d(TAG, error.getUrl());
                 Log.d(TAG, "findCard failure");
             }
         });
@@ -181,7 +184,7 @@ public class TransientAudioService extends Service implements RecognitionListene
     public void onPartialResults(Bundle bundle) {
         List<String> stringList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         if (stringList.size() > 0) {
-            Log.i(TAG, "onPartialResults" + stringList);
+//            Log.i(TAG, "onPartialResults" + stringList);
         }
     }
 

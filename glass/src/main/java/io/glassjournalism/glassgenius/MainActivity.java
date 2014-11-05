@@ -14,6 +14,7 @@ import com.google.android.glass.widget.CardScrollView;
 
 import java.util.List;
 
+import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
@@ -38,20 +39,21 @@ public class MainActivity extends Activity implements GeniusCardListener {
         mCardScroller = new CardScrollView(this);
         setContentView(mCardScroller);
 
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
-        glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
-        glassGeniusAPI.getCards(new Callback<List<GeniusCard>>() {
-            @Override
-            public void success(List<GeniusCard> geniusCards, Response response) {
-                geniusCardAdapter = new GeniusCardAdapter(MainActivity.this, geniusCards);
-                mCardScroller.setAdapter(geniusCardAdapter);
-            }
+        geniusCardAdapter = new GeniusCardAdapter(MainActivity.this);
+        mCardScroller.setAdapter(geniusCardAdapter);
 
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
+//        glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
+//        glassGeniusAPI.getCards(new Callback<List<GeniusCard>>() {
+//            @Override
+//            public void success(List<GeniusCard> geniusCards, Response response) {
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.d(TAG, "retrofit error " + error.getUrl());
+//            }
+//        });
     }
 
     @Override

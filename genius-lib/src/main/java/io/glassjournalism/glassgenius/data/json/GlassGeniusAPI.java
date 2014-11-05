@@ -13,6 +13,6 @@ public interface GlassGeniusAPI {
     @GET("/card")
     void getCards(Callback<List<GeniusCard>> cb);
 
-    @GET("/card/find/")
+    @GET("/card/find")
     void findCard(@Query("words") String words, Callback<GeniusCard> cb);
 }

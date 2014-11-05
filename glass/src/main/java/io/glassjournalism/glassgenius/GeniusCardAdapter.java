@@ -2,14 +2,17 @@ package io.glassjournalism.glassgenius;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.RestAdapter;
@@ -21,14 +24,15 @@ public class GeniusCardAdapter extends CardScrollAdapter {
     private GlassGeniusAPI glassGeniusAPI;
     private Activity mActivity;
 
-    public GeniusCardAdapter(Activity activity, List<GeniusCard> cards) {
-        this.cardList = cards;
+    public GeniusCardAdapter(Activity activity) {
+        this.cardList = new ArrayList<GeniusCard>();
         this.mActivity = activity;
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
         glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
     }
 
     public void addCard(GeniusCard card) {
+        Log.d(TAG, "added: " + card.getName());
         cardList.add(0, card);
         notifyDataSetChanged();
     }
@@ -49,7 +53,9 @@ public class GeniusCardAdapter extends CardScrollAdapter {
         WebView webView = new WebView(mActivity);
         webView.setInitialScale(100);
         webView.setBackgroundColor(Color.TRANSPARENT);
-        webView.loadUrl("http://glacial-ridge-6503.herokuapp.com/card/preview/" + card.getId());
+        String url = Constants.API_ROOT + "/card/preview/" + card.getId();
+        Log.d(TAG, url);
+        webView.loadUrl(url);
         return webView;
     }
 
