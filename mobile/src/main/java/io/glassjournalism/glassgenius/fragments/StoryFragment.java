@@ -149,48 +149,45 @@ public class StoryFragment extends Fragment {
         getFragmentManager().beginTransaction().replace(R.id.container, gccf).addToBackStack("StoryFragment").commit();
     }
 
-    public void addSampleCards() {
-
-        for (int i = 0; i < 10; i++) {
-            View newCard = inflater.inflate(R.layout.card_preview_card, null);
-
-            final ImageView iv = ViewUtils.findViewById(newCard, R.id.cardImage);
-
-            FrameLayout frameLayout = ViewUtils.findViewById(newCard, R.id.cardImageLayout);
-
-            int x = getResources().getDisplayMetrics().widthPixels - MiscUtils.dpToPx(getActivity(), 32);
-            int y = x * 9;
-            y = (int) (((float) y)/16.0f);
-
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(x, y);
-
-            frameLayout.setLayoutParams(lp);
-
-            final WebView wv = new WebView(getActivity());
-
-            wv.setWebChromeClient(new WebChromeClient() {
-                public void onProgressChanged(WebView view, int progress) {
-                    if (progress == 100) {
-                        new Background(wv, iv).execute();
-                        Log.i(getTag(), "WebView done loading card.");
-                    }
-                }
-            });
-
-            wv.loadUrl("http://vinnie.io/sample-card.html");
-
-            scrollViewLinearLayout.addView(newCard);
-        }
-    }
+//    public void addSampleCards() {
+//
+//        for (int i = 0; i < 10; i++) {
+//            View newCard = inflater.inflate(R.layout.card_preview_card, null);
+//
+//            FrameLayout frameLayout = ViewUtils.findViewById(newCard, R.id.cardImageLayout);
+//
+//            int x = getResources().getDisplayMetrics().widthPixels - MiscUtils.dpToPx(getActivity(), 32);
+//            int y = x * 9;
+//            y = (int) (((float) y)/16.0f);
+//
+//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(x, y);
+//
+//            frameLayout.setLayoutParams(lp);
+//
+//            final WebView wv = new WebView(getActivity());
+//
+//            wv.setWebChromeClient(new WebChromeClient() {
+//                public void onProgressChanged(WebView view, int progress) {
+//                    if (progress == 100) {
+//                        new Background(wv, iv).execute();
+//                        Log.i(getTag(), "WebView done loading card.");
+//                    }
+//                }
+//            });
+//
+//            wv.loadUrl("http://vinnie.io/sample-card.html");
+//
+//            scrollViewLinearLayout.addView(newCard);
+//        }
+//    }
 
     public void addCard(final GeniusCard geniusCard) {
         View view = inflater.inflate(R.layout.card_preview_card, null);
         TextView title = (TextView) view.findViewById(R.id.cardTitle);
-        final ImageView cardImage = (ImageView) view.findViewById(R.id.cardImage);
 
         FrameLayout cardImageLayout = (FrameLayout) view.findViewById(R.id.cardImageLayout);
         int width = getResources().getDisplayMetrics().widthPixels - MiscUtils.dpToPx(getActivity(), 32);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, (int) ((9.f/16.f) * ((float) width)));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) ((9.f/16.f) * ((float) width)));
 
         TextView triggerWordTitle = (TextView) view.findViewById(R.id.triggerWordTitle);
         final ImageView triggerWordToggle = (ImageView) view.findViewById(R.id.triggerWordToggle);
@@ -204,59 +201,20 @@ public class StoryFragment extends Fragment {
         String mime = "text/html";
         String encoding = "utf-8";
 
-        WebView webView = new WebView(getActivity());
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadDataWithBaseURL(null, geniusCard.getTemplate().getHandlebarsTemplate(), mime, encoding, null);
+        int wvWidth = getActivity().getResources().getDisplayMetrics().widthPixels - MiscUtils.dpToPx(getActivity(), 32);
+        int wvHeight = (int) (9.f/16.f) * wvWidth;
+        int scalePercent = (int) (((double) wvWidth)/640.f * 100);
 
-        webView.setWebChromeClient(new WebChromeClient() {
-            boolean handleBarsCompleted = false;
-
-            public void onProgressChanged(WebView webView, int progress) {
-                if (progress == 100) {
-                    if (!handleBarsCompleted) {
-                        String template = "";
-                        Variables variables = geniusCard.getVariables();
-                        if (!variables.getBackgroundImage().equals("")) {
-                            template += "BackgroundImage\": \"" + variables.getBackgroundImage() + "\"";
-                        }
-
-                        if (!variables.getAvatarImage().equals("")) {
-                            if (!template.equals("")) {
-                                template += ", ";
-                            }
-                            template += "\"AvatarImage\": \"" + variables.getAvatarImage() + "\"";
-                        }
-
-                        if (!variables.getTitle().equals("")) {
-                            if (!template.equals("")) {
-                                template += ", ";
-                            }
-                            template += "\"Title\": \"" + variables.getTitle() + "\"";
-                        }
-
-                        if (!variables.getSubTitle().equals("")) {
-                            if (!template.equals("")) {
-                                template += ", ";
-                            }
-                            template += "\"SubTitle\": \"" + variables.getSubTitle() + "\"";
-                        }
-
-                        if (!variables.getBodyText().equals("")) {
-                            if (!template.equals("")) {
-                                template += ", ";
-                            }
-                            template += "\"BodyText\": \"" + variables.getBodyText() + "\"";
-                        }
-
-                        webView.loadUrl("template({" + template + "})");
-                        handleBarsCompleted = true;
-                    } else {
-                        new Background(webView, cardImage).execute();
-                        Log.i(getTag(), "WebView done loading card.");
-                    }
-                }
-            }
-        });
+        WebView webView = (WebView) view.findViewById(R.id.cardWebView);
+        webView.setInitialScale(scalePercent);
+        webView.loadUrl("http://glacial-ridge-6503.herokuapp.com/card/preview/" + geniusCard.getId());
+//        webView.setWebChromeClient(new WebChromeClient() {
+//
+//            public void onProgressChanged(WebView webView, int progress) {
+//                new Background(webView, cardImage).execute();
+//                Log.i(getTag(), "WebView done loading card.");
+//            }
+//        });
 
         List<String> triggerWords = geniusCard.getTriggerWords();
 
@@ -343,7 +301,9 @@ public class StoryFragment extends Fragment {
         protected Bitmap doInBackground(Void... params) {
             try {
                 Thread.sleep(2000);
-                Bitmap bitmap = Bitmap.createBitmap(1920, 1080, Bitmap.Config.ARGB_8888);
+                int width = getActivity().getResources().getDisplayMetrics().widthPixels - MiscUtils.dpToPx(getActivity(), 32);
+                int height = (int) (9.f/16.f) * width;
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(bitmap);
                 webView.draw(canvas);
                 return bitmap;
