@@ -6,19 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.glass.widget.CardScrollView;
 
-import io.glassjournalism.glassgenius.data.json.Constants;
-import io.glassjournalism.glassgenius.data.json.GeniusCard;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
-import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
-import retrofit.RestAdapter;
 
 public class MainActivity extends Activity implements GeniusCardListener {
 
@@ -27,7 +27,8 @@ public class MainActivity extends Activity implements GeniusCardListener {
     private GeniusCardAdapter geniusCardAdapter;
     public TransientAudioService mAudioService;
     private boolean mIsBound = false;
-    private CountDownTimer mTimer;
+    private Deque<String> cardQueue = new LinkedList<String>();
+    private Timer mTimer;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -38,7 +39,9 @@ public class MainActivity extends Activity implements GeniusCardListener {
         setContentView(mCardScroller);
 
         geniusCardAdapter = new GeniusCardAdapter(MainActivity.this);
+        mCardScroller.setEmptyView(new ProgressBar(this));
         mCardScroller.setAdapter(geniusCardAdapter);
+
     }
 
     @Override
@@ -52,14 +55,10 @@ public class MainActivity extends Activity implements GeniusCardListener {
     protected void onPause() {
         super.onPause();
         mCardScroller.deactivate();
-        if (mTimer != null) {
-            mTimer.cancel();
-        }
         doUnbindService();
     }
 
     private void doUnbindService() {
-        Log.d(TAG, "doUnbindService");
         if (mIsBound) {
             unbindService(mConnection);
             mIsBound = false;
@@ -67,7 +66,6 @@ public class MainActivity extends Activity implements GeniusCardListener {
     }
 
     private void doBindService() {
-        Log.d(TAG, "doBindService");
         bindService(new Intent(this,
                 TransientAudioService.class), mConnection, Context.BIND_AUTO_CREATE);
         mIsBound = true;
@@ -76,37 +74,33 @@ public class MainActivity extends Activity implements GeniusCardListener {
     ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mAudioService = ((TransientAudioService.TransientAudioBinder) service).getService();
-            Log.d(TAG, "service Connected");
             mAudioService.setCardListener(MainActivity.this);
         }
 
         public void onServiceDisconnected(ComponentName className) {
-            Log.d(TAG, "service Disconnected");
         }
     };
 
 
     @Override
     public void onCardFound(final String cardId) {
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer = null;
-        } else {
-            if (mCardScroller.isActivated()) {
-                geniusCardAdapter.addCard(cardId);
-            }
-        }
-        mTimer = new CountDownTimer(0, 3000) {
-            @Override
-            public void onTick(long l) { }
-
-            @Override
-            public void onFinish() {
-                if (mCardScroller.isActivated()) {
-                    geniusCardAdapter.addCard(cardId);
+        cardQueue.push(cardId);
+        if (mTimer == null) {
+            mTimer = new Timer();
+            mTimer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    if (cardQueue.size() > 0) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                geniusCardAdapter.addCard(cardQueue.pop());
+                            }
+                        });
+                    }
                 }
-            }
-        };
-        mTimer.start();
+
+            }, 0, 2000);
+        }
     }
 }

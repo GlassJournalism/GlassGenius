@@ -15,6 +15,9 @@ public interface GlassGeniusAPI {
     @GET("/card")
     void getCards(Callback<List<GeniusCard>> cb);
 
+    @GET("/card?fields=id")
+    void getAllCardIDs(Callback<List<JsonArray>> cb);
+
     @GET("/card/find")
     void findCard(@Query("text") String text, Callback<JsonArray> cb);
 

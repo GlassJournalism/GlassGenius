@@ -46,7 +46,6 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "onCreate");
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizer.setRecognitionListener(this);
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
@@ -85,7 +84,6 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind");
         mRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -98,7 +96,6 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
-        Log.d(TAG, "onReadyForSpeech");
         if (mTimer != null) {
             mTimer.cancel();
         }
@@ -106,7 +103,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onBeginningOfSpeech() {
-        Log.d(TAG, "onBeginningOfSpeech");
+
     }
 
     @Override
@@ -121,7 +118,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onEndOfSpeech() {
-        Log.d(TAG, "onEndOfSpeech");
+
     }
 
     @Override
@@ -170,7 +167,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                             if (!viewedCardIDs.contains(cardId.getAsString())) {
                                 viewedCardIDs.add(cardId.getAsString());
                                 mGeniusCardListener.onCardFound(cardId.getAsString());
-                                Log.d(TAG, "adding card with ID: cardId.getAsString");
+                                Log.d(TAG, "adding card with ID: " + cardId.getAsString());
                                 break;
                             }
                         }

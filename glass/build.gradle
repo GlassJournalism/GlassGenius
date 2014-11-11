@@ -42,8 +42,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.squareup.picasso:picasso:+'
+    compile 'com.koushikdutta.ion:ion:2.+'
     compile 'com.jakewharton:butterknife:5.+'
     compile 'com.crashlytics.android:crashlytics:1.+'
+    compile 'com.android.support:support-v4:21.+'
     compile project(':genius-lib')
 }
