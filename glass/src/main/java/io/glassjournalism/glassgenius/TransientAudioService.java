@@ -2,6 +2,8 @@ package io.glassjournalism.glassgenius;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,12 +16,17 @@ import android.util.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import io.glassjournalism.glassgenius.data.json.CardFieldResponse;
 import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
@@ -39,6 +46,7 @@ public class TransientAudioService extends Service implements RecognitionListene
     private GeniusCardListener mGeniusCardListener;
     private List<String> keyWordList = new ArrayList<String>();
     private Set<String> viewedCardIDs = new HashSet<String>();
+    private Deque<String> imageURLs = new LinkedList<String>();
 
     public void setCardListener(GeniusCardListener listener) {
         mGeniusCardListener = listener;
@@ -50,6 +58,21 @@ public class TransientAudioService extends Service implements RecognitionListene
         mSpeechRecognizer.setRecognitionListener(this);
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
         glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
+        glassGeniusAPI.getAllCardIDs(new Callback<List<CardFieldResponse>>() {
+            @Override
+            public void success(List<CardFieldResponse> cardFieldResponses, Response response) {
+                for (CardFieldResponse card : cardFieldResponses) {
+                    final String cardImageURL = Constants.API_ROOT + "/card/render/" + card.getId();
+                    imageURLs.push(cardImageURL);
+                }
+                new ImageLoadTask().execute();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
         glassGeniusAPI.getTriggers(new Callback<JsonArray>() {
             @Override
             public void success(JsonArray triggerResponse, Response response) {
@@ -58,7 +81,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                         keyWordList.add(trigger.getAsString());
                     }
                 }
-                Log.d(TAG, "loaded keyword: " + keyWordList.toString());
+                Log.d(TAG, "loaded keywords: " + keyWordList.toString());
             }
 
             @Override
@@ -227,6 +250,26 @@ public class TransientAudioService extends Service implements RecognitionListene
     public class TransientAudioBinder extends Binder {
         public TransientAudioService getService() {
             return TransientAudioService.this;
+        }
+    }
+
+    private class ImageLoadTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if (imageURLs.size() > 0) {
+                String url = imageURLs.pop();
+                Log.d(TAG, "preloading: " + url);
+                Ion.with(TransientAudioService.this).load(url).asBitmap().setCallback(new FutureCallback<Bitmap>() {
+                    @Override
+                    public void onCompleted(Exception e, Bitmap result) {
+                        if (imageURLs.size() > 0) {
+                            new ImageLoadTask().execute();
+                        }
+                    }
+                });
+            }
+            return null;
         }
     }
 }
