@@ -1,5 +1,7 @@
 package io.glassjournalism.glassgenius.data.json;
 
+import com.google.gson.JsonArray;
+
 import java.util.List;
 
 import retrofit.Callback;
@@ -14,5 +16,9 @@ public interface GlassGeniusAPI {
     void getCards(Callback<List<GeniusCard>> cb);
 
     @GET("/card/find")
-    void findCard(@Query("words") String words, Callback<GeniusCard> cb);
+    void findCard(@Query("text") String text, Callback<JsonArray> cb);
+
+    @GET("/card/triggers")
+    void getTriggers(Callback <JsonArray> cb);
+
 }

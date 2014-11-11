@@ -12,10 +12,15 @@ import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.glassjournalism.glassgenius.data.json.Constants;
-import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.Callback;
@@ -32,6 +37,8 @@ public class TransientAudioService extends Service implements RecognitionListene
     private CountDownTimer mTimer;
     private GlassGeniusAPI glassGeniusAPI;
     private GeniusCardListener mGeniusCardListener;
+    private List<String> keyWordList = new ArrayList<String>();
+    private Set<String> viewedCardIDs = new HashSet<String>();
 
     public void setCardListener(GeniusCardListener listener) {
         mGeniusCardListener = listener;
@@ -44,6 +51,24 @@ public class TransientAudioService extends Service implements RecognitionListene
         mSpeechRecognizer.setRecognitionListener(this);
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
         glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
+        glassGeniusAPI.getTriggers(new Callback<JsonArray>() {
+            @Override
+            public void success(JsonArray triggerResponse, Response response) {
+                for (JsonElement trigger : triggerResponse) {
+                    if (trigger.getAsString().length() > 0) {
+                        keyWordList.add(trigger.getAsString());
+                    }
+                }
+                Log.d(TAG, "loaded keyword: " + keyWordList.toString());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, error.getUrl());
+                Log.d(TAG, error.getResponse().getReason());
+                Log.d(TAG, "error fetching keyword list at start");
+            }
+        });
     }
 
     @Override
@@ -133,31 +158,48 @@ public class TransientAudioService extends Service implements RecognitionListene
         restartSpeech();
     }
 
+    private void findCardsForWords(String words) {
+        for (String keyword : keyWordList) {
+            if (words.toLowerCase().contains(keyword.toLowerCase())) {
+                Log.d(TAG, "matched trigger: " + keyword + " from dict to " + words);
+                glassGeniusAPI.findCard(words, new Callback<JsonArray>() {
+                    @Override
+                    public void success(JsonArray foundCardResponse, Response response) {
+                        Log.d(TAG, foundCardResponse.toString());
+                        for (JsonElement cardId : foundCardResponse) {
+                            if (!viewedCardIDs.contains(cardId.getAsString())) {
+                                viewedCardIDs.add(cardId.getAsString());
+                                mGeniusCardListener.onCardFound(cardId.getAsString());
+                                Log.d(TAG, "adding card with ID: cardId.getAsString");
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d(TAG, "findCard failure");
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void onPartialResults(Bundle bundle) {
+        List<String> wordList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        String words = TextUtils.join(",", wordList);
+        findCardsForWords(words);
+    }
+
     @Override
     public void onResults(Bundle bundle) {
         if (mTimer != null) {
             mTimer.cancel();
         }
-
         List<String> wordList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        Log.i(TAG, "onResults: " + wordList);
         String words = TextUtils.join(",", wordList);
-        glassGeniusAPI.findCard(words, new Callback<GeniusCard>() {
-            @Override
-            public void success(GeniusCard geniusCard, Response response) {
-                Log.d(TAG, "response: " + response.getUrl() + " " + response.getReason());
-                if (null != mGeniusCardListener) {
-                    mGeniusCardListener.onCardFound(geniusCard);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, error.getUrl());
-                Log.d(TAG, "findCard failure");
-            }
-        });
-
+        findCardsForWords(words);
         restartSpeech();
     }
 
@@ -178,14 +220,6 @@ public class TransientAudioService extends Service implements RecognitionListene
             };
         }
         mTimer.start();
-    }
-
-    @Override
-    public void onPartialResults(Bundle bundle) {
-        List<String> stringList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        if (stringList.size() > 0) {
-//            Log.i(TAG, "onPartialResults" + stringList);
-        }
     }
 
     @Override

@@ -97,9 +97,9 @@ public class MainActivity extends Activity implements GeniusCardListener {
 
 
     @Override
-    public void onCardFound(GeniusCard card) {
+    public void onCardFound(String cardId) {
         if (mCardScroller.isActivated()) {
-            geniusCardAdapter.addCard(card);
+            geniusCardAdapter.addCard(cardId);
         }
     }
 }
