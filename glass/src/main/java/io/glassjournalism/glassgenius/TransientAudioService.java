@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import io.glassjournalism.glassgenius.data.json.CardFieldResponse;
+import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
 import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
@@ -58,21 +59,6 @@ public class TransientAudioService extends Service implements RecognitionListene
         mSpeechRecognizer.setRecognitionListener(this);
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
         glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
-        glassGeniusAPI.getAllCardIDs(new Callback<List<CardFieldResponse>>() {
-            @Override
-            public void success(List<CardFieldResponse> cardFieldResponses, Response response) {
-                for (CardFieldResponse card : cardFieldResponses) {
-                    final String cardImageURL = Constants.API_ROOT + "/card/render/" + card.getId();
-                    imageURLs.push(cardImageURL);
-                }
-                new ImageLoadTask().execute();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
         glassGeniusAPI.getTriggers(new Callback<JsonArray>() {
             @Override
             public void success(JsonArray triggerResponse, Response response) {
@@ -89,6 +75,21 @@ public class TransientAudioService extends Service implements RecognitionListene
                 Log.d(TAG, error.getUrl());
                 Log.d(TAG, error.getResponse().getReason());
                 Log.d(TAG, "error fetching keyword list at start");
+            }
+        });
+        glassGeniusAPI.getAllCardIDs(new Callback<List<CardFieldResponse>>() {
+            @Override
+            public void success(List<CardFieldResponse> cardFieldResponses, Response response) {
+                for (CardFieldResponse card : cardFieldResponses) {
+                    String cardImageURL = Constants.API_ROOT + "/card/render/" + card.getId();
+                    imageURLs.push(cardImageURL);
+                }
+                new ImageLoadTask().execute();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
             }
         });
     }
@@ -179,18 +180,17 @@ public class TransientAudioService extends Service implements RecognitionListene
     }
 
     private void findCardsForWords(String words) {
-        for (final String keyword : keyWordList) {
+        for (String keyword : keyWordList) {
             if (words.toLowerCase().contains(keyword.toLowerCase())) {
                 Log.d(TAG, "matched trigger: " + keyword + " from dict to " + words);
-                glassGeniusAPI.findCard(words, new Callback<JsonArray>() {
+                glassGeniusAPI.findCard(words, new Callback<List<CardFoundResponse>>() {
                     @Override
-                    public void success(JsonArray foundCardResponse, Response response) {
-                        Log.d(TAG, foundCardResponse.toString());
-                        for (JsonElement cardId : foundCardResponse) {
-                            if (!viewedCardIDs.contains(cardId.getAsString())) {
-                                viewedCardIDs.add(cardId.getAsString());
-                                mGeniusCardListener.onCardFound(cardId.getAsString());
-                                Log.d(TAG, "adding card with ID: " + cardId.getAsString());
+                    public void success(List<CardFoundResponse> cardFoundResponses, Response response) {
+                        for (CardFoundResponse card : cardFoundResponses) {
+                            if (!viewedCardIDs.contains(card.getId())) {
+                                viewedCardIDs.add(card.getId());
+                                mGeniusCardListener.onCardFound(card);
+                                Log.d(TAG, "adding card with ID: " + card.getId());
                                 break;
                             }
                         }
@@ -259,7 +259,7 @@ public class TransientAudioService extends Service implements RecognitionListene
         protected Void doInBackground(Void... voids) {
             if (imageURLs.size() > 0) {
                 String url = imageURLs.pop();
-                Log.d(TAG, "preloading: " + url);
+//                Log.d(TAG, "preloading: " + url);
                 Ion.with(TransientAudioService.this).load(url).asBitmap().setCallback(new FutureCallback<Bitmap>() {
                     @Override
                     public void onCompleted(Exception e, Bitmap result) {

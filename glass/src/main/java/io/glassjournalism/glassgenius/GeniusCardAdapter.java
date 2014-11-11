@@ -1,17 +1,24 @@
 package io.glassjournalism.glassgenius;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
 import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.RestAdapter;
@@ -19,7 +26,7 @@ import retrofit.RestAdapter;
 public class GeniusCardAdapter extends CardScrollAdapter {
 
     private final String TAG = getClass().getName();
-    private List<String> cardIDList = new ArrayList<String>();
+    private List<CardFoundResponse> cardList = new ArrayList<CardFoundResponse>();
     private GlassGeniusAPI glassGeniusAPI;
     private Activity mActivity;
 //    private Picasso mPicasso;
@@ -39,20 +46,20 @@ public class GeniusCardAdapter extends CardScrollAdapter {
 //        mPicasso.setIndicatorsEnabled(true);
     }
 
-    public void addCard(String cardId) {
-        Log.d(TAG, "added: " + cardId);
-        cardIDList.add(0, cardId);
+    public void addCard(CardFoundResponse card) {
+        Log.d(TAG, "added: " + card.getId());
+        cardList.add(0, card);
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return cardIDList.size();
+        return cardList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return cardIDList.get(position);
+        return cardList.get(position);
     }
 
     @Override
@@ -61,13 +68,14 @@ public class GeniusCardAdapter extends CardScrollAdapter {
         if (view != null) {
             holder = (ViewHolder) view.getTag();
         } else {
-            view = new ImageView(mActivity);
+            view = View.inflate(mActivity, R.layout.card_layout, null);
             holder = new ViewHolder(view);
             view.setTag(holder);
         }
-        String cardId = cardIDList.get(position);
-        final String cardImageURL = Constants.API_ROOT + "/card/render/" + cardId;
+        String cardId = cardList.get(position).getId();
+        String cardImageURL = Constants.API_ROOT + "/card/render/" + cardId;
         Ion.with(holder.imageView).load(cardImageURL);
+        holder.triggers.setText(TextUtils.join(", ", cardList.get(position).getTriggers()));
         return view;
     }
 
@@ -77,10 +85,13 @@ public class GeniusCardAdapter extends CardScrollAdapter {
     }
 
     static class ViewHolder {
+        @InjectView(R.id.image)
         ImageView imageView;
+        @InjectView(R.id.triggers)
+        TextView triggers;
 
         public ViewHolder(View view) {
-            imageView = (ImageView) view;
+            ButterKnife.inject(this, view);
         }
 
     }

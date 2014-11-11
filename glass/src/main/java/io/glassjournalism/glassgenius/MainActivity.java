@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 
 public class MainActivity extends Activity implements GeniusCardListener {
@@ -27,7 +28,7 @@ public class MainActivity extends Activity implements GeniusCardListener {
     private GeniusCardAdapter geniusCardAdapter;
     public TransientAudioService mAudioService;
     private boolean mIsBound = false;
-    private Deque<String> cardQueue = new LinkedList<String>();
+    private Deque<CardFoundResponse> cardQueue = new LinkedList<CardFoundResponse>();
     private Timer mTimer;
 
     @Override
@@ -83,8 +84,8 @@ public class MainActivity extends Activity implements GeniusCardListener {
 
 
     @Override
-    public void onCardFound(final String cardId) {
-        cardQueue.push(cardId);
+    public void onCardFound(CardFoundResponse cardFound) {
+        cardQueue.push(cardFound);
         if (mTimer == null) {
             mTimer = new Timer();
             mTimer.scheduleAtFixedRate(new TimerTask() {
