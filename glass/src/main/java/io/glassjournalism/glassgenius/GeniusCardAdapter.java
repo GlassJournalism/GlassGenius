@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ImageView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,19 +49,40 @@ public class GeniusCardAdapter extends CardScrollAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(int position, View view, ViewGroup parent) {
+        ViewHolder holder;
+        if (view != null) {
+            holder = (ViewHolder) view.getTag();
+        } else {
+            view = new ImageView(mActivity);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
+        }
         String cardId = cardIdList.get(position);
-        WebView webView = new WebView(mActivity);
-        webView.setInitialScale(100);
-        webView.setBackgroundColor(Color.TRANSPARENT);
-        String url = Constants.API_ROOT + "/card/preview/" + cardId;
-        Log.d(TAG, url);
-        webView.loadUrl(url);
-        return webView;
+        String cardImageURL = Constants.API_ROOT + "/card/render/" + cardId;
+        Picasso.with(mActivity).load(cardImageURL).into(holder.imageView);
+//        WebView webView = new WebView(mActivity);
+//        webView.setInitialScale(100);
+//        webView.setBackgroundColor(Color.TRANSPARENT);
+//        String url = Constants.API_ROOT + "/card/preview/" + cardId;
+//        Log.d(TAG, url);
+//        webView.loadUrl(url);
+//        return webView;
+        return view;
     }
 
     @Override
     public int getPosition(Object o) {
         return 0;
+    }
+
+    static class ViewHolder {
+        ImageView imageView;
+
+        public ViewHolder(View view) {
+            imageView = (ImageView) view;
+        }
+
+
     }
 }
