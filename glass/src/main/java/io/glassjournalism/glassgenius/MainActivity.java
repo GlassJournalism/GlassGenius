@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.WindowManager;
@@ -24,9 +25,9 @@ public class MainActivity extends Activity implements GeniusCardListener {
     private final String TAG = "MainActivity";
     private CardScrollView mCardScroller;
     private GeniusCardAdapter geniusCardAdapter;
-    private GlassGeniusAPI glassGeniusAPI;
     public TransientAudioService mAudioService;
     private boolean mIsBound = false;
+    private CountDownTimer mTimer;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -51,6 +52,9 @@ public class MainActivity extends Activity implements GeniusCardListener {
     protected void onPause() {
         super.onPause();
         mCardScroller.deactivate();
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
         doUnbindService();
     }
 
@@ -83,9 +87,26 @@ public class MainActivity extends Activity implements GeniusCardListener {
 
 
     @Override
-    public void onCardFound(String cardId) {
-        if (mCardScroller.isActivated()) {
-            geniusCardAdapter.addCard(cardId);
+    public void onCardFound(final String cardId) {
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        } else {
+            if (mCardScroller.isActivated()) {
+                geniusCardAdapter.addCard(cardId);
+            }
         }
+        mTimer = new CountDownTimer(0, 3000) {
+            @Override
+            public void onTick(long l) { }
+
+            @Override
+            public void onFinish() {
+                if (mCardScroller.isActivated()) {
+                    geniusCardAdapter.addCard(cardId);
+                }
+            }
+        };
+        mTimer.start();
     }
 }
