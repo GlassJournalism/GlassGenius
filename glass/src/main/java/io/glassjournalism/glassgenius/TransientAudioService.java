@@ -159,7 +159,7 @@ public class TransientAudioService extends Service implements RecognitionListene
     }
 
     private void findCardsForWords(String words) {
-        for (String keyword : keyWordList) {
+        for (final String keyword : keyWordList) {
             if (words.toLowerCase().contains(keyword.toLowerCase())) {
                 Log.d(TAG, "matched trigger: " + keyword + " from dict to " + words);
                 glassGeniusAPI.findCard(words, new Callback<JsonArray>() {

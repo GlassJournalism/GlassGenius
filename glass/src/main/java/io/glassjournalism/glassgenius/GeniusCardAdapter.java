@@ -1,28 +1,32 @@
 package io.glassjournalism.glassgenius;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ImageView;
 
+import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.glassjournalism.glassgenius.data.json.Constants;
-import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.RestAdapter;
 
 public class GeniusCardAdapter extends CardScrollAdapter {
 
     private final String TAG = getClass().getName();
-    private List<String> cardIdList = new ArrayList<String>();
+    private List<String> cardIDList = new ArrayList<String>();
     private GlassGeniusAPI glassGeniusAPI;
     private Activity mActivity;
 
@@ -34,18 +38,18 @@ public class GeniusCardAdapter extends CardScrollAdapter {
 
     public void addCard(String cardId) {
         Log.d(TAG, "added: " + cardId);
-        cardIdList.add(0, cardId);
+        cardIDList.add(0, cardId);
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return cardIdList.size();
+        return cardIDList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return cardIdList.get(position);
+        return cardIDList.get(position);
     }
 
     @Override
@@ -54,20 +58,14 @@ public class GeniusCardAdapter extends CardScrollAdapter {
         if (view != null) {
             holder = (ViewHolder) view.getTag();
         } else {
-            view = new ImageView(mActivity);
+            view = new View(mActivity);
             holder = new ViewHolder(view);
             view.setTag(holder);
         }
-        String cardId = cardIdList.get(position);
+        String cardId = cardIDList.get(position);
         String cardImageURL = Constants.API_ROOT + "/card/render/" + cardId;
+        Picasso.with(mActivity).setIndicatorsEnabled(true);
         Picasso.with(mActivity).load(cardImageURL).into(holder.imageView);
-//        WebView webView = new WebView(mActivity);
-//        webView.setInitialScale(100);
-//        webView.setBackgroundColor(Color.TRANSPARENT);
-//        String url = Constants.API_ROOT + "/card/preview/" + cardId;
-//        Log.d(TAG, url);
-//        webView.loadUrl(url);
-//        return webView;
         return view;
     }
 

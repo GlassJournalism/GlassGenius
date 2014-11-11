@@ -38,20 +38,6 @@ public class MainActivity extends Activity implements GeniusCardListener {
 
         geniusCardAdapter = new GeniusCardAdapter(MainActivity.this);
         mCardScroller.setAdapter(geniusCardAdapter);
-
-
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
-//        glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
-//        glassGeniusAPI.getCards(new Callback<List<GeniusCard>>() {
-//            @Override
-//            public void success(List<GeniusCard> geniusCards, Response response) {
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.d(TAG, "retrofit error " + error.getUrl());
-//            }
-//        });
     }
 
     @Override
