@@ -1,9 +1,11 @@
 package io.glassjournalism.glassgenius.data.json;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Generated;
-import com.google.gson.annotations.Expose;
 
 @Generated("org.jsonschema2pojo")
 public class CardFoundResponse {

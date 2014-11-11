@@ -12,9 +12,7 @@ import com.google.android.glass.widget.CardScrollAdapter;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -29,21 +27,11 @@ public class GeniusCardAdapter extends CardScrollAdapter {
     private List<CardFoundResponse> cardList = new ArrayList<CardFoundResponse>();
     private GlassGeniusAPI glassGeniusAPI;
     private Activity mActivity;
-//    private Picasso mPicasso;
 
     public GeniusCardAdapter(Activity activity) {
         this.mActivity = activity;
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
         glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
-//        Picasso.Builder builder = new Picasso.Builder(mActivity);
-//        builder.listener(new Picasso.Listener() {
-//            @Override
-//            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
-//                Log.d("Picasso Failure", uri.toString() + " " + exception.getMessage());
-//            }
-//        });
-//        mPicasso = builder.build();
-//        mPicasso.setIndicatorsEnabled(true);
     }
 
     public void addCard(CardFoundResponse card) {
