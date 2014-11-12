@@ -67,6 +67,9 @@ public class TransientAudioService extends Service implements RecognitionListene
                         keyWordList.add(trigger.getAsString());
                     }
                 }
+                if (mGeniusCardListener != null) {
+                    mGeniusCardListener.onKeywordsLoaded();
+                }
                 Log.d(TAG, "loaded keywords: " + keyWordList.toString());
             }
 

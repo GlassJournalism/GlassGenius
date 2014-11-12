@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.glass.widget.CardScrollView;
@@ -18,13 +20,20 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 
 public class MainActivity extends Activity implements GeniusCardListener {
 
     private final String TAG = "MainActivity";
-    private CardScrollView mCardScroller;
+    @InjectView(R.id.cardScrollView)
+    CardScrollView mCardScroller;
+    @InjectView(R.id.statusText)
+    TextView loadingText;
+    @InjectView(R.id.loading)
+    LinearLayout loadingView;
     private GeniusCardAdapter geniusCardAdapter;
     public TransientAudioService mAudioService;
     private boolean mIsBound = false;
@@ -34,13 +43,11 @@ public class MainActivity extends Activity implements GeniusCardListener {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
         Crashlytics.start(this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mCardScroller = new CardScrollView(this);
-        setContentView(mCardScroller);
-
         geniusCardAdapter = new GeniusCardAdapter(MainActivity.this);
-        mCardScroller.setEmptyView(new ProgressBar(this));
         mCardScroller.setAdapter(geniusCardAdapter);
 
     }
@@ -84,7 +91,13 @@ public class MainActivity extends Activity implements GeniusCardListener {
 
 
     @Override
+    public void onKeywordsLoaded() {
+        loadingText.setText("Genius Ready");
+    }
+
+    @Override
     public void onCardFound(CardFoundResponse cardFound) {
+        loadingView.setVisibility(View.GONE);
         cardQueue.push(cardFound);
         if (mTimer == null) {
             mTimer = new Timer();
