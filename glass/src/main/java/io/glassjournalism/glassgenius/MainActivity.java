@@ -121,7 +121,7 @@ public class MainActivity extends Activity implements GeniusCardListener {
                     }
                 }
 
-            }, 0, 2000);
+            }, 0, 4000);
         }
     }
 }

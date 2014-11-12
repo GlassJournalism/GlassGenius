@@ -85,7 +85,6 @@ public class TransientAudioService extends Service implements RecognitionListene
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
         glassGeniusAPI.getAllCardIDs(new Callback<List<CardFieldResponse>>() {
