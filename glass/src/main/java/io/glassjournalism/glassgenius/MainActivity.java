@@ -109,6 +109,7 @@ public class MainActivity extends Activity implements GeniusCardListener {
                             @Override
                             public void run() {
                                 geniusCardAdapter.addCard(cardQueue.pop());
+                                mCardScroller.setSelection(0);
                             }
                         });
                     }
