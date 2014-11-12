@@ -96,6 +96,12 @@ public class MainActivity extends Activity implements GeniusCardListener {
     }
 
     @Override
+    public void onError(String error) {
+        loadingText.setText(error);
+
+    }
+
+    @Override
     public void onCardFound(CardFoundResponse cardFound) {
         loadingView.setVisibility(View.GONE);
         cardQueue.push(cardFound);

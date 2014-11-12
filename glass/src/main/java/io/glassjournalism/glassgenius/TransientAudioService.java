@@ -75,9 +75,17 @@ public class TransientAudioService extends Service implements RecognitionListene
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(TAG, error.getUrl());
-                Log.d(TAG, error.getResponse().getReason());
                 Log.d(TAG, "error fetching keyword list at start");
+                if (mGeniusCardListener != null) {
+                    mGeniusCardListener.onError("Check Network");
+                }
+                try {
+                    Log.d(TAG, error.getUrl());
+                    Log.d(TAG, error.getResponse().getReason());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
         glassGeniusAPI.getAllCardIDs(new Callback<List<CardFieldResponse>>() {
