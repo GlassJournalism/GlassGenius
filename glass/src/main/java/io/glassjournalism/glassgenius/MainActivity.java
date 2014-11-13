@@ -46,7 +46,6 @@ public class MainActivity extends Activity implements GeniusCardListener {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         Crashlytics.start(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         geniusCardAdapter = new GeniusCardAdapter(MainActivity.this);
         mCardScroller.setAdapter(geniusCardAdapter);
 
@@ -105,6 +104,7 @@ public class MainActivity extends Activity implements GeniusCardListener {
     public void onCardFound(CardFoundResponse cardFound) {
         loadingView.setVisibility(View.GONE);
         cardQueue.push(cardFound);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         if (mTimer == null) {
             mTimer = new Timer();
             mTimer.scheduleAtFixedRate(new TimerTask() {
