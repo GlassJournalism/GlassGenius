@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -52,7 +53,7 @@ public class TransientAudioService extends Service implements RecognitionListene
     private List<String> keyWordList = new ArrayList<String>();
     private Set<String> viewedCardIDs = new HashSet<String>();
     private Deque<String> imageURLs = new LinkedList<String>();
-    private SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    private SharedPreferences sharedPrefs;
 
     public void setCardListener(GeniusCardListener listener) {
         mGeniusCardListener = listener;
@@ -60,6 +61,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onCreate() {
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizer.setRecognitionListener(this);
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
@@ -136,6 +138,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
+        Log.d(TAG, "onReadyForSpeech");
         if (mTimer != null) {
             mTimer.cancel();
         }
@@ -143,6 +146,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onBeginningOfSpeech() {
+        Log.d(TAG, "onBeginningOfSpeech");
 
     }
 
@@ -196,6 +200,7 @@ public class TransientAudioService extends Service implements RecognitionListene
     }
 
     private void findCardsForWords(String words) {
+        Log.d(TAG, "findCardsForWords " + words);
         for (String keyword : keyWordList) {
             if (words.toLowerCase().contains(keyword.toLowerCase())) {
                 Log.d(TAG, "matched trigger: " + keyword + " from dict to " + words);
@@ -223,6 +228,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onPartialResults(Bundle bundle) {
+        Log.d(TAG, "onParitialResults");
         List<String> wordList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String words = TextUtils.join(",", wordList);
         findCardsForWords(words);
@@ -230,6 +236,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onResults(Bundle bundle) {
+        Log.d(TAG, "onResults");
         if (mTimer != null) {
             mTimer.cancel();
         }
@@ -290,22 +297,9 @@ public class TransientAudioService extends Service implements RecognitionListene
     }
 
     private String getSessionID() {
-        String[] params = {"android_id"};
-        Cursor c = getContentResolver()
-                .query(Uri.parse("content://com.google.android.gsf.gservices"), null, null, params, null);
-
-        if (!c.moveToFirst() || c.getColumnCount() < 2) {
-            c.close();
-            return null;
-        }
-
-        try {
-            String androidId = Long.toHexString(Long.parseLong(c.getString(1)));
-            c.close();
-            return androidId;
-        } catch (NumberFormatException e) {
-            c.close();
-            return null;
-        }
+        String deviceId = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        String session = sharedPrefs.getString("session", "");
+        return deviceId + session;
     }
 }
