@@ -23,7 +23,19 @@
 
             <meta-data
                 android:name="com.google.android.glass.VoiceTrigger"
-                android:resource="@xml/voice_trigger" />
+                android:resource="@xml/voice_trigger_genius" />
+        </activity>
+        <activity
+            android:name="io.glassjournalism.glassgenius.POVActivity"
+            android:icon="@drawable/glass_genius_glass"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="com.google.android.glass.VoiceTrigger"
+                android:resource="@xml/voice_trigger_pov" />
         </activity>
 
         <service
