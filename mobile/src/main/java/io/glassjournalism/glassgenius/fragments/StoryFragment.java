@@ -7,11 +7,9 @@ import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -21,7 +19,6 @@ import android.widget.TextView;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.percolate.caffeine.MiscUtils;
-import com.percolate.caffeine.ViewUtils;
 
 import java.util.List;
 
@@ -30,9 +27,7 @@ import butterknife.InjectView;
 import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
-import io.glassjournalism.glassgenius.data.json.Variables;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -253,9 +248,7 @@ public class StoryFragment extends Fragment {
     }
 
     public void loadCards() {
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
-        GlassGeniusAPI glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
-        glassGeniusAPI.getCards(new Callback<List<GeniusCard>>() {
+        GlassGeniusAPI.GlassGeniusAPI.getCards(new Callback<List<GeniusCard>>() {
 
             @Override
             public void success(List<GeniusCard> geniusCards, Response response) {

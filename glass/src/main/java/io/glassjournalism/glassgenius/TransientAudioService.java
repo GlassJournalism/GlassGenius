@@ -3,9 +3,7 @@ package io.glassjournalism.glassgenius;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
@@ -37,7 +35,6 @@ import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -48,12 +45,13 @@ public class TransientAudioService extends Service implements RecognitionListene
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mRecognizerIntent;
     private CountDownTimer mTimer;
-    private GlassGeniusAPI glassGeniusAPI;
     private GeniusCardListener mGeniusCardListener;
     private List<String> keyWordList = new ArrayList<String>();
     private Set<String> viewedCardIDs = new HashSet<String>();
     private Deque<String> imageURLs = new LinkedList<String>();
     private SharedPreferences sharedPrefs;
+
+    private String lastRequestedWords;
 
     public void setCardListener(GeniusCardListener listener) {
         mGeniusCardListener = listener;
@@ -64,9 +62,7 @@ public class TransientAudioService extends Service implements RecognitionListene
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizer.setRecognitionListener(this);
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(Constants.API_ROOT).build();
-        glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
-        glassGeniusAPI.getTriggers(new Callback<JsonArray>() {
+        GlassGeniusAPI.GlassGeniusAPI.getTriggers(new Callback<JsonArray>() {
             @Override
             public void success(JsonArray triggerResponse, Response response) {
                 for (JsonElement trigger : triggerResponse) {
@@ -95,7 +91,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                 }
             }
         });
-        glassGeniusAPI.getAllCardIDs(new Callback<List<CardFieldResponse>>() {
+        GlassGeniusAPI.GlassGeniusAPI.getAllCardIDs(new Callback<List<CardFieldResponse>>() {
             @Override
             public void success(List<CardFieldResponse> cardFieldResponses, Response response) {
                 for (CardFieldResponse card : cardFieldResponses) {
@@ -204,24 +200,27 @@ public class TransientAudioService extends Service implements RecognitionListene
         for (String keyword : keyWordList) {
             if (words.toLowerCase().contains(keyword.toLowerCase())) {
                 Log.d(TAG, "matched trigger: " + keyword + " from dict to " + words);
-                glassGeniusAPI.findCard(getSessionID(), words, new Callback<List<CardFoundResponse>>() {
-                    @Override
-                    public void success(List<CardFoundResponse> cardFoundResponses, Response response) {
-                        for (CardFoundResponse card : cardFoundResponses) {
-                            if (!viewedCardIDs.contains(card.getId())) {
-                                viewedCardIDs.add(card.getId());
-                                mGeniusCardListener.onCardFound(card);
-                                Log.d(TAG, "adding card with ID: " + card.getId());
-                                break;
+                if (!words.equals(lastRequestedWords)) {
+                    lastRequestedWords = words;
+                    GlassGeniusAPI.GlassGeniusAPI.findCard(getSessionID(), words, new Callback<List<CardFoundResponse>>() {
+                        @Override
+                        public void success(List<CardFoundResponse> cardFoundResponses, Response response) {
+                            for (CardFoundResponse card : cardFoundResponses) {
+                                if (!viewedCardIDs.contains(card.getId())) {
+                                    viewedCardIDs.add(card.getId());
+                                    mGeniusCardListener.onCardFound(card);
+                                    Log.d(TAG, "adding card with ID: " + card.getId());
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.d(TAG, "findCard failure");
-                    }
-                });
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.d(TAG, "findCard failure");
+                        }
+                    });
+                }
             }
         }
     }

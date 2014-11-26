@@ -5,24 +5,30 @@ import com.google.gson.JsonArray;
 import java.util.List;
 
 import retrofit.Callback;
+import retrofit.RestAdapter;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Query;
 
 public interface GlassGeniusAPI {
+
+    public static GlassGeniusAPI GlassGeniusAPI = new RestAdapter.Builder()
+            .setEndpoint(Constants.API_ROOT)
+            .build().create(GlassGeniusAPI.class);
+
     @GET("/category")
-    void getCategories(Callback<List<Category>> categories);
+    public abstract void getCategories(Callback<List<Category>> categories);
 
     @GET("/card")
-    void getCards(Callback<List<GeniusCard>> cb);
+    public abstract void getCards(Callback<List<GeniusCard>> cb);
 
     @GET("/card?fields=id")
-    void getAllCardIDs(Callback<List<CardFieldResponse>> cb);
+    public abstract void getAllCardIDs(Callback<List<CardFieldResponse>> cb);
 
     @GET("/card/find")
-    void findCard(@Header("Session-Id") String sessionId, @Query("text") String text, Callback<List<CardFoundResponse>> cb);
+    public abstract void findCard(@Header("Session-Id") String sessionId, @Query("text") String text, Callback<List<CardFoundResponse>> cb);
 
     @GET("/card/triggers")
-    void getTriggers(Callback <JsonArray> cb);
+    public abstract void getTriggers(Callback<JsonArray> cb);
 
 }

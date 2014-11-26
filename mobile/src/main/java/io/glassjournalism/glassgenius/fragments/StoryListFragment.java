@@ -19,7 +19,6 @@ import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.data.json.Category;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -205,9 +204,7 @@ public class StoryListFragment extends Fragment {
 
 
     public void loadStories() {
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://glacial-ridge-6503.herokuapp.com").build();
-        GlassGeniusAPI glassGeniusAPI = restAdapter.create(GlassGeniusAPI.class);
-        glassGeniusAPI.getCategories(new Callback<List<Category>>() {
+        GlassGeniusAPI.GlassGeniusAPI.getCategories(new Callback<List<Category>>() {
 
             @Override
             public void success(List<Category> categories, Response response) {
