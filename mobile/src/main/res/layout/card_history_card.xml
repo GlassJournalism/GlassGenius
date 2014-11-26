@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <CardView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="16dp"
+                android:id="@+id/cardTitle"
+                android:text="test title"
+                style="@style/cardHistoryTitle" />
+
+            <ImageView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitStart"
+                android:id="@+id/cardImage" />
+
+            <TextView android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="sample trigger words"
+                android:id="@+id/cardHistoryTrigger"
+                style="@style/cardHistoryTriggerWord" />
+
+        </LinearLayout>
+
+    </CardView>
+
+</FrameLayout>
