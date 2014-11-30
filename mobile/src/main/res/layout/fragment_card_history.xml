@@ -1,27 +1,24 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="io.glassjournalism.glassgenius.fragments.CardHistoryFragment">
 
-    <ScrollView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cardScrollView">
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:id="@+id/cardListView"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:clipToPadding="false"
-            android:paddingTop="4dp"
-            android:paddingRight="4dp"
-            android:paddingLeft="4dp"
-            android:paddingBottom="4dp"
-            android:id="@+id/cardScrollLayout">
-
-            <!-- CARDS GO HERE -->
-
-        </LinearLayout>
-    </ScrollView>
+    <com.faizmalkani.floatingactionbutton.FloatingActionButton
+        android:id="@+id/sessionFab"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp" />
 
 </FrameLayout>

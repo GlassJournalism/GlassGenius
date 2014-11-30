@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Glass Genius</string>
+    <string name="title_section0">Genius Feed</string>
     <string name="title_section1">Stories</string>
     <string name="title_section2">Photos</string>
     <string name="title_section3">Videos</string>

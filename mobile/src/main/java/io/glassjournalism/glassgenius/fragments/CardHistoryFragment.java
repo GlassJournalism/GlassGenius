@@ -1,22 +1,26 @@
 package io.glassjournalism.glassgenius.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Fragment;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ListView;
 
-import com.squareup.picasso.Picasso;
+import com.firebase.client.Firebase;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 import io.glassjournalism.glassgenius.R;
-import io.glassjournalism.glassgenius.data.json.GeniusCard;
+import io.glassjournalism.glassgenius.data.json.Constants;
+import io.glassjournalism.glassgenius.firebase.FirebaseAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,22 +31,61 @@ import io.glassjournalism.glassgenius.data.json.GeniusCard;
  * create an instance of this fragment.
  */
 public class CardHistoryFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Firebase cardsRef;
 
-    @InjectView(R.id.cardScrollView)
-    ScrollView cardScrollView;
-    @InjectView(R.id.cardScrollLayout)
-    LinearLayout cardScrollLayout;
+    private String sessionID;
+
+    @InjectView(R.id.cardListView)
+    ListView cardListView;
 
     LayoutInflater layoutInflater;
     View rootView;
+
+    @OnClick(R.id.sessionFab)
+    public void onSessionFabClick(View v) {
+        // Set an EditText view to get user input
+        final EditText input = new EditText(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                .setTitle("Glass Genius Session")
+                .setMessage("Enter a session code")
+                .setView(input)
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (input.getText().toString().length() == 5) {
+                            sessionID = input.getText().toString();
+                            dialogInterface.dismiss();
+                            FirebaseAdapter adapter = new FirebaseAdapter(getActivity(), getCardsRef());
+                            cardListView.setAdapter(adapter);
+                        } else {
+                            input.setError("Enter a 5-digit session ID");
+                        }
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        if (!getActivity().isFinishing()) {
+            try {
+                dialog.show();
+            } catch (WindowManager.BadTokenException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Firebase getCardsRef() {
+        if (null == cardsRef) {
+            cardsRef = new Firebase(Constants.FIREBASE_URL).child("sessions").child(sessionID);
+        }
+        return cardsRef;
+    }
 
     private OnFragmentInteractionListener mListener;
 
@@ -54,12 +97,9 @@ public class CardHistoryFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment CardHistoryFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static CardHistoryFragment newInstance(String param1, String param2) {
         CardHistoryFragment fragment = new CardHistoryFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,21 +109,12 @@ public class CardHistoryFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         layoutInflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_card_history, container, false);
-
+        ButterKnife.inject(this, rootView);
         return rootView;
     }
 
@@ -109,19 +140,6 @@ public class CardHistoryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public void addCard(GeniusCard geniusCard) {
-        View newCard = layoutInflater.inflate(R.layout.card_history_card, null);
-        TextView title = (TextView) newCard.findViewById(R.id.cardTitle);
-        TextView triggerWord = (TextView) newCard.findViewById(R.id.cardHistoryTrigger);
-        ImageView cardImage = (ImageView) newCard.findViewById(R.id.cardImage);
-
-        title.setText(geniusCard.getName());
-        triggerWord.setText("Trigger phrase goes here");
-        Picasso.with(getActivity()).load("http://glacial-ridge-6503.herokuapp.com/card/preview/" + geniusCard.getId()).into(cardImage);
-
-        cardScrollLayout.addView(newCard);
     }
 
     /**

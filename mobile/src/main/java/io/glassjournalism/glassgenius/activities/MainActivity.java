@@ -39,7 +39,7 @@ import retrofit.mime.TypedFile;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, StoryListFragment.OnFragmentInteractionListener, StoryFragment.OnFragmentInteractionListener, PhotoListFragment.OnFragmentInteractionListener, VideoListFragment.OnFragmentInteractionListener, GlassCardCreationFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, StoryListFragment.OnFragmentInteractionListener, StoryFragment.OnFragmentInteractionListener, PhotoListFragment.OnFragmentInteractionListener, VideoListFragment.OnFragmentInteractionListener, GlassCardCreationFragment.OnFragmentInteractionListener, CardHistoryFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -103,6 +103,7 @@ public class MainActivity extends ActionBarActivity
         switch (position) {
             case 0:
                 fragment = CardHistoryFragment.newInstance("", "");
+                break;
             case 1:
                 fragment = StoryListFragment.newInstance("", "");
                 break;
@@ -125,7 +126,7 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle ="Card History";
+                mTitle = getString(R.string.title_section0);
                 break;
             case 2:
                 mTitle = getString(R.string.title_section1);
