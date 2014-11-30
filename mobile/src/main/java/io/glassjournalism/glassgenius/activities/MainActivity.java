@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.firebase.client.Firebase;
+
 import java.io.File;
 
 import io.filepicker.FilePickerAPI;
@@ -58,6 +60,7 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Firebase.setAndroidContext(this);
 
 //        getActionBar().setHomeAsUpIndicator(drawerArrowDrawable);
 //        getActionBar().setDisplayHomeAsUpEnabled(true);

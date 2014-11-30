@@ -2,9 +2,6 @@ package io.glassjournalism.glassgenius.data.json;
 
 import com.google.gson.annotations.Expose;
 
-import javax.annotation.Generated;
-
-@Generated("org.jsonschema2pojo")
 public class CardFieldResponse {
 
     @Expose

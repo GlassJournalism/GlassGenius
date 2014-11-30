@@ -13,25 +13,31 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.firebase.client.Firebase;
 import com.google.android.glass.widget.CardScrollView;
 
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
+import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
+import io.glassjournalism.glassgenius.data.json.GeniusLoadListener;
 
-public class MainActivity extends Activity implements GeniusCardListener {
+public class MainActivity extends Activity implements GeniusCardListener, GeniusLoadListener {
 
     private final String TAG = "MainActivity";
     @InjectView(R.id.cardScrollView)
     CardScrollView mCardScroller;
     @InjectView(R.id.statusText)
     TextView loadingText;
+    @InjectView(R.id.sessionText)
+    TextView sessionText;
     @InjectView(R.id.loading)
     LinearLayout loadingView;
     private GeniusCardAdapter geniusCardAdapter;
@@ -39,6 +45,15 @@ public class MainActivity extends Activity implements GeniusCardListener {
     private boolean mIsBound = false;
     private Deque<CardFoundResponse> cardQueue = new LinkedList<CardFoundResponse>();
     private Timer mTimer;
+    private Firebase cardsRef;
+    private String sessionID;
+
+    private Firebase getCardsRef() {
+        if (null == cardsRef) {
+            cardsRef = new Firebase(Constants.FIREBASE_URL).child("sessions").child(sessionID);
+        }
+        return cardsRef;
+    }
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -46,10 +61,11 @@ public class MainActivity extends Activity implements GeniusCardListener {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         Crashlytics.start(this);
+        Firebase.setAndroidContext(this);
         geniusCardAdapter = new GeniusCardAdapter(MainActivity.this);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller.setAdapter(geniusCardAdapter);
-
+        sessionID = UUID.randomUUID().toString().substring(0, 5);
     }
 
     @Override
@@ -82,7 +98,7 @@ public class MainActivity extends Activity implements GeniusCardListener {
     ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mAudioService = ((TransientAudioService.TransientAudioBinder) service).getService();
-            mAudioService.setCardListener(MainActivity.this);
+            mAudioService.setLoadListener(MainActivity.this);
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -92,7 +108,15 @@ public class MainActivity extends Activity implements GeniusCardListener {
 
     @Override
     public void onKeywordsLoaded() {
-        loadingText.setText("Genius Ready");
+        loadingText.setText("Genius Ready, tap to start");
+        sessionText.setText("Session: ");
+        loadingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadingView.setOnClickListener(null);
+                mAudioService.setCardListener(MainActivity.this);
+            }
+        });
     }
 
     @Override
@@ -114,7 +138,9 @@ public class MainActivity extends Activity implements GeniusCardListener {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                geniusCardAdapter.addCard(cardQueue.pop());
+                                CardFoundResponse newCardFound = cardQueue.pop();
+                                geniusCardAdapter.addCard(newCardFound);
+                                getCardsRef().push().setValue(newCardFound);
                                 mCardScroller.setSelection(0);
                             }
                         });

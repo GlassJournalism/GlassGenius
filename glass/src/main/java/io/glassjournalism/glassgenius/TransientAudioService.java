@@ -33,6 +33,7 @@ import io.glassjournalism.glassgenius.data.json.CardFieldResponse;
 import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
 import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
+import io.glassjournalism.glassgenius.data.json.GeniusLoadListener;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -46,6 +47,7 @@ public class TransientAudioService extends Service implements RecognitionListene
     private Intent mRecognizerIntent;
     private CountDownTimer mTimer;
     private GeniusCardListener mGeniusCardListener;
+    private GeniusLoadListener mGeniusLoadListener;
     private List<String> keyWordList = new ArrayList<String>();
     private Set<String> viewedCardIDs = new HashSet<String>();
     private Deque<String> imageURLs = new LinkedList<String>();
@@ -55,6 +57,10 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     public void setCardListener(GeniusCardListener listener) {
         mGeniusCardListener = listener;
+    }
+
+    public void setLoadListener(GeniusLoadListener listener) {
+        mGeniusLoadListener = listener;
     }
 
     @Override
@@ -72,7 +78,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                 }
                 if (mGeniusCardListener != null) {
                     sharedPrefs.edit().putString("session", String.valueOf(System.currentTimeMillis())).apply();
-                    mGeniusCardListener.onKeywordsLoaded();
+                    mGeniusLoadListener.onKeywordsLoaded();
                 }
                 Log.d(TAG, "loaded keywords: " + keyWordList.toString());
             }
@@ -134,7 +140,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
-        Log.d(TAG, "onReadyForSpeech");
+//        Log.d(TAG, "onReadyForSpeech");
         if (mTimer != null) {
             mTimer.cancel();
         }
@@ -142,7 +148,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onBeginningOfSpeech() {
-        Log.d(TAG, "onBeginningOfSpeech");
+//        Log.d(TAG, "onBeginningOfSpeech");
 
     }
 
@@ -196,7 +202,7 @@ public class TransientAudioService extends Service implements RecognitionListene
     }
 
     private void findCardsForWords(String words) {
-        Log.d(TAG, "findCardsForWords " + words);
+//        Log.d(TAG, "findCardsForWords " + words);
         for (String keyword : keyWordList) {
             if (words.toLowerCase().contains(keyword.toLowerCase())) {
                 Log.d(TAG, "matched trigger: " + keyword + " from dict to " + words);
@@ -227,7 +233,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onPartialResults(Bundle bundle) {
-        Log.d(TAG, "onParitialResults");
+//        Log.d(TAG, "onParitialResults");
         List<String> wordList = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String words = TextUtils.join(",", wordList);
         findCardsForWords(words);
@@ -235,7 +241,7 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onResults(Bundle bundle) {
-        Log.d(TAG, "onResults");
+//        Log.d(TAG, "onResults");
         if (mTimer != null) {
             mTimer.cancel();
         }
