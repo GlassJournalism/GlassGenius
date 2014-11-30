@@ -52,7 +52,6 @@ public class TransientAudioService extends Service implements RecognitionListene
     private Set<String> viewedCardIDs = new HashSet<String>();
     private Deque<String> imageURLs = new LinkedList<String>();
     private SharedPreferences sharedPrefs;
-
     private String lastRequestedWords;
 
     public void setCardListener(GeniusCardListener listener) {
@@ -65,9 +64,9 @@ public class TransientAudioService extends Service implements RecognitionListene
 
     @Override
     public void onCreate() {
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mSpeechRecognizer.setRecognitionListener(this);
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         GlassGeniusAPI.GlassGeniusAPI.getTriggers(new Callback<JsonArray>() {
             @Override
             public void success(JsonArray triggerResponse, Response response) {
@@ -76,8 +75,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                         keyWordList.add(trigger.getAsString());
                     }
                 }
-                if (mGeniusCardListener != null) {
-                    sharedPrefs.edit().putString("session", String.valueOf(System.currentTimeMillis())).apply();
+                if (mGeniusLoadListener != null) {
                     mGeniusLoadListener.onKeywordsLoaded();
                 }
                 Log.d(TAG, "loaded keywords: " + keyWordList.toString());
@@ -208,7 +206,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                 Log.d(TAG, "matched trigger: " + keyword + " from dict to " + words);
                 if (!words.equals(lastRequestedWords)) {
                     lastRequestedWords = words;
-                    GlassGeniusAPI.GlassGeniusAPI.findCard(getSessionID(), words, new Callback<List<CardFoundResponse>>() {
+                    GlassGeniusAPI.GlassGeniusAPI.findCard(sharedPrefs.getString("session", null), words, new Callback<List<CardFoundResponse>>() {
                         @Override
                         public void success(List<CardFoundResponse> cardFoundResponses, Response response) {
                             for (CardFoundResponse card : cardFoundResponses) {
@@ -299,12 +297,5 @@ public class TransientAudioService extends Service implements RecognitionListene
             }
             return null;
         }
-    }
-
-    private String getSessionID() {
-        String deviceId = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        String session = sharedPrefs.getString("session", "");
-        return deviceId + session;
     }
 }

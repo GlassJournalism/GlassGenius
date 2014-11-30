@@ -5,8 +5,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -47,6 +51,7 @@ public class MainActivity extends Activity implements GeniusCardListener, Genius
     private Timer mTimer;
     private Firebase cardsRef;
     private String sessionID;
+    private boolean canClick = false;
 
     private Firebase getCardsRef() {
         if (null == cardsRef) {
@@ -66,6 +71,8 @@ public class MainActivity extends Activity implements GeniusCardListener, Genius
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mCardScroller.setAdapter(geniusCardAdapter);
         sessionID = UUID.randomUUID().toString().substring(0, 5);
+        SharedPreferences sharedPrefs = sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        sharedPrefs.edit().putString("session", sessionID).apply();
     }
 
     @Override
@@ -105,18 +112,24 @@ public class MainActivity extends Activity implements GeniusCardListener, Genius
         }
     };
 
+    @Override
+    public boolean onKeyDown(int keycode, KeyEvent event) {
+        if (keycode == KeyEvent.KEYCODE_DPAD_CENTER && canClick) {
+            canClick = false;
+            mAudioService.setCardListener(MainActivity.this);
+            loadingText.setText("Listening...");
+            sessionText.setText("");
+            return true;
+        }
+        return super.onKeyDown(keycode, event);
+    }
+
 
     @Override
     public void onKeywordsLoaded() {
         loadingText.setText("Genius Ready, tap to start");
-        sessionText.setText("Session: ");
-        loadingView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadingView.setOnClickListener(null);
-                mAudioService.setCardListener(MainActivity.this);
-            }
-        });
+        sessionText.setText("Session: " + sessionID);
+        canClick = true;
     }
 
     @Override
