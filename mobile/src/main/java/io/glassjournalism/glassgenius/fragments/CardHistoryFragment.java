@@ -32,9 +32,7 @@ import io.glassjournalism.glassgenius.firebase.FirebaseAdapter;
  */
 public class CardHistoryFragment extends Fragment {
 
-    private Firebase cardsRef;
-
-    private String sessionID;
+    private Firebase sessionRef;
 
     @InjectView(R.id.cardListView)
     ListView cardListView;
@@ -60,9 +58,10 @@ public class CardHistoryFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (input.getText().toString().length() == 5) {
-                            sessionID = input.getText().toString();
+                            String sessionID = input.getText().toString();
                             dialogInterface.dismiss();
-                            FirebaseAdapter adapter = new FirebaseAdapter(getActivity(), getCardsRef());
+                            FirebaseAdapter adapter = new FirebaseAdapter(getActivity(), sessionRef.child(sessionID));
+                            cardListView.invalidate();
                             cardListView.setAdapter(adapter);
                         } else {
                             input.setError("Enter a 5-digit session ID");
@@ -78,13 +77,6 @@ public class CardHistoryFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-    }
-
-    public Firebase getCardsRef() {
-        if (null == cardsRef) {
-            cardsRef = new Firebase(Constants.FIREBASE_URL).child("sessions").child(sessionID);
-        }
-        return cardsRef;
     }
 
     private OnFragmentInteractionListener mListener;
@@ -115,6 +107,7 @@ public class CardHistoryFragment extends Fragment {
         layoutInflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_card_history, container, false);
         ButterKnife.inject(this, rootView);
+        sessionRef = new Firebase(Constants.FIREBASE_URL).child("sessions");
         return rootView;
     }
 

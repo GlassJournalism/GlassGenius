@@ -46,6 +46,7 @@ public class FirebaseAdapter extends BaseAdapter {
         listener = this.ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG, "onChildAdded");
 
                 CardFoundResponse card = dataSnapshot.getValue(CardFoundResponse.class);
                 cardNames.put(dataSnapshot.getKey(), card);
@@ -63,7 +64,6 @@ public class FirebaseAdapter extends BaseAdapter {
                         cards.add(nextIndex, card);
                     }
                 }
-
                 notifyDataSetChanged();
 
             }
@@ -74,6 +74,7 @@ public class FirebaseAdapter extends BaseAdapter {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onChildRemoved");
                 // A song was removed from the list. Remove it from our list and the name mapping
                 String cardName = dataSnapshot.getKey();
                 CardFoundResponse oldCard = cardNames.get(cardName);
@@ -107,11 +108,7 @@ public class FirebaseAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (cards.size() == 1) {
-            return 0;
-        } else {
-            return cards.size();
-        }
+        return cards.size();
     }
 
     @Override
