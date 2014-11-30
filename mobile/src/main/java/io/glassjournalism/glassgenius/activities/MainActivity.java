@@ -22,6 +22,7 @@ import java.io.File;
 import io.filepicker.FilePickerAPI;
 import io.glassjournalism.glassgenius.FilePickerImageResponse;
 import io.glassjournalism.glassgenius.R;
+import io.glassjournalism.glassgenius.fragments.CardHistoryFragment;
 import io.glassjournalism.glassgenius.fragments.GlassCardCreationFragment;
 import io.glassjournalism.glassgenius.fragments.NavigationDrawerFragment;
 import io.glassjournalism.glassgenius.fragments.PhotoListFragment;
@@ -101,16 +102,18 @@ public class MainActivity extends ActionBarActivity
 
         switch (position) {
             case 0:
+                fragment = CardHistoryFragment.newInstance("", "");
+            case 1:
                 fragment = StoryListFragment.newInstance("", "");
                 break;
-            case 1:
+            case 2:
                 fragment = PhotoListFragment.newInstance("", "");
                 break;
-            case 2:
+            case 3:
                 fragment = VideoListFragment.newInstance("", "");
                 break;
             default:
-                fragment = StoryListFragment.newInstance("", "");
+                fragment = CardHistoryFragment.newInstance("", "");
                 break;
         }
 
@@ -122,12 +125,15 @@ public class MainActivity extends ActionBarActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                mTitle ="Card History";
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                mTitle = getString(R.string.title_section1);
                 break;
             case 3:
+                mTitle = getString(R.string.title_section2);
+                break;
+            case 4:
                 mTitle = getString(R.string.title_section3);
                 break;
         }
