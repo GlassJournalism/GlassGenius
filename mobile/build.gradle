@@ -44,10 +44,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'com.android.support:support-v4:+'
     compile 'com.android.support:cardview-v7:+'
-    compile 'com.squareup.picasso:picasso:+'
     compile 'com.squareup.retrofit:retrofit:1.+'
     compile 'com.jakewharton:butterknife:5.1.2'
     compile 'com.firebase:firebase-client-android:2.+'
+    compile 'com.squareup.picasso:picasso:2.+'
     compile project(':genius-lib')
     compile project(':filepicker-library')
 }

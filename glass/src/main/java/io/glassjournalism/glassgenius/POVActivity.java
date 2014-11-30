@@ -1,14 +1,9 @@
 package io.glassjournalism.glassgenius;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,17 +12,9 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.glass.widget.CardScrollView;
-
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
-import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
 
 public class POVActivity extends Activity {
 

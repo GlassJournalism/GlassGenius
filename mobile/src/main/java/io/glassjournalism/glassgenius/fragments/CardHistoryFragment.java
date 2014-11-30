@@ -4,15 +4,19 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.firebase.client.Firebase;
 
 import butterknife.ButterKnife;
@@ -36,14 +40,18 @@ public class CardHistoryFragment extends Fragment {
 
     @InjectView(R.id.cardListView)
     ListView cardListView;
+    @InjectView(R.id.sessionFab)
+    FloatingActionButton sessionFab;
 
     LayoutInflater layoutInflater;
+    SharedPreferences sharedPrefs;
     View rootView;
 
     @OnClick(R.id.sessionFab)
     public void onSessionFabClick(View v) {
         // Set an EditText view to get user input
         final EditText input = new EditText(getActivity());
+        input.setText(sharedPrefs.getString("session", null));
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setTitle("Glass Genius Session")
                 .setMessage("Enter a session code")
@@ -59,6 +67,7 @@ public class CardHistoryFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (input.getText().toString().length() == 5) {
                             String sessionID = input.getText().toString();
+                            sharedPrefs.edit().putString("session", sessionID).apply();
                             dialogInterface.dismiss();
                             FirebaseAdapter adapter = new FirebaseAdapter(getActivity(), sessionRef.child(sessionID));
                             cardListView.invalidate();
@@ -107,7 +116,13 @@ public class CardHistoryFragment extends Fragment {
         layoutInflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_card_history, container, false);
         ButterKnife.inject(this, rootView);
+        int width = getActivity().getResources().getDisplayMetrics().widthPixels;
+        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(width, AbsListView.LayoutParams.WRAP_CONTENT);
+        cardListView.setLayoutParams(lp);
+        sessionFab.setDrawable(getResources().getDrawable(R.drawable.ic_action_new));
+        sessionFab.setColor(getResources().getColor(R.color.pink_a400));
         sessionRef = new Firebase(Constants.FIREBASE_URL).child("sessions");
+        sharedPrefs =  PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         return rootView;
     }
 

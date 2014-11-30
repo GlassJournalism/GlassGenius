@@ -8,6 +8,8 @@ import java.util.List;
 public class CardFoundResponse {
 
     @Expose
+    private String name;
+    @Expose
     private String id;
     @Expose
     private List<String> triggers = new ArrayList<String>();
@@ -48,4 +50,11 @@ public class CardFoundResponse {
         this.triggers = triggers;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

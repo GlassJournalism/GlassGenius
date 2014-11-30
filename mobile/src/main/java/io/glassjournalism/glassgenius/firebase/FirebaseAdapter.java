@@ -1,6 +1,7 @@
 package io.glassjournalism.glassgenius.firebase;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,7 +134,8 @@ public class FirebaseAdapter extends BaseAdapter {
             view.setTag(holder);
         }
         CardFoundResponse card = cards.get(position);
-        holder.cardHistoryTrigger.setText(card.getTriggers().toString());
+        holder.cardHistoryTrigger.setText(TextUtils.join(", ", card.getTriggers()));
+        holder.cardTitle.setText(card.getName());
         String cardImageURL = Constants.API_ROOT + "/card/render/" + card.getId();
         Log.d(TAG, cardImageURL);
         Picasso.with(mActivity).load(cardImageURL).into(holder.cardImage);
