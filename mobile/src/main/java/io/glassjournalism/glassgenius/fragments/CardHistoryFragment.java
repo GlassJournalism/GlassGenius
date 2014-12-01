@@ -116,9 +116,6 @@ public class CardHistoryFragment extends Fragment {
         layoutInflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_card_history, container, false);
         ButterKnife.inject(this, rootView);
-        int width = getActivity().getResources().getDisplayMetrics().widthPixels;
-        AbsListView.LayoutParams lp = new AbsListView.LayoutParams(width, AbsListView.LayoutParams.WRAP_CONTENT);
-        cardListView.setLayoutParams(lp);
         sessionFab.setDrawable(getResources().getDrawable(R.drawable.ic_action_new));
         sessionFab.setColor(getResources().getColor(R.color.pink_a400));
         sessionRef = new Firebase(Constants.FIREBASE_URL).child("sessions");

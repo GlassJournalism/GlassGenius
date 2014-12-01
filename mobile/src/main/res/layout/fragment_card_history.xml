@@ -7,10 +7,10 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:paddingBottom="4dp"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
         android:paddingTop="4dp"
+        android:divider="@android:color/transparent"
         android:id="@+id/cardListView"/>
 
     <com.faizmalkani.floatingactionbutton.FloatingActionButton

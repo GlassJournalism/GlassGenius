@@ -1,12 +1,17 @@
 package io.glassjournalism.glassgenius.firebase;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
@@ -14,6 +19,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
+import com.percolate.caffeine.MiscUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -139,10 +145,27 @@ public class FirebaseAdapter extends BaseAdapter {
         String cardImageURL = Constants.API_ROOT + "/card/render/" + card.getId();
         Log.d(TAG, cardImageURL);
         Picasso.with(mActivity).load(cardImageURL).into(holder.cardImage);
+
+        int width = mActivity.getResources().getDisplayMetrics().widthPixels;
+        int widthPicture = width - MiscUtils.dpToPx(mActivity, 16);
+        int heightPicture = (int) ((widthPicture/16.0f) * 9.0f);
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(widthPicture, heightPicture);
+
+        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.leftMargin = MiscUtils.dpToPx(mActivity, 8);
+        lp.rightMargin = lp.leftMargin;
+        lp.topMargin = lp.leftMargin/2;
+        lp.bottomMargin = lp.topMargin;
+
+        view.setLayoutParams(lp);
+
+        holder.cardImage.setLayoutParams(lp2);
         return view;
     }
 
     static class ViewHolder {
+        @InjectView(R.id.card)
+        CardView card;
         @InjectView(R.id.cardTitle)
         TextView cardTitle;
         @InjectView(R.id.cardHistoryTrigger)
