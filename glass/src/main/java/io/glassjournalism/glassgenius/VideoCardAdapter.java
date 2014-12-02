@@ -1,12 +1,13 @@
 package io.glassjournalism.glassgenius;
 
 import android.app.Activity;
-import android.text.TextUtils;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.koushikdutta.ion.Ion;
@@ -16,22 +17,21 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
-import io.glassjournalism.glassgenius.data.json.Constants;
+import io.glassjournalism.glassgenius.data.json.VideoResponse;
 
-public class GeniusCardAdapter extends CardScrollAdapter {
+public class VideoCardAdapter extends CardScrollAdapter {
 
     private final String TAG = getClass().getName();
-    private List<CardFoundResponse> cardList = new ArrayList<CardFoundResponse>();
+    private List<VideoResponse> cardList = new ArrayList<VideoResponse>();
     private Activity mActivity;
 
-    public GeniusCardAdapter(Activity activity) {
+    public VideoCardAdapter(Activity activity) {
         this.mActivity = activity;
+        notifyDataSetChanged();
     }
 
-    public void addCard(CardFoundResponse card) {
-        Log.d(TAG, "added: " + card.getId());
-        cardList.add(0, card);
+    public void addVideos(List<VideoResponse> videoResponses) {
+        cardList.addAll(videoResponses);
         notifyDataSetChanged();
     }
 
@@ -51,14 +51,15 @@ public class GeniusCardAdapter extends CardScrollAdapter {
         if (view != null) {
             holder = (ViewHolder) view.getTag();
         } else {
-            view = View.inflate(mActivity, R.layout.card_layout, null);
+            view = View.inflate(mActivity, R.layout.video_card_layout, null);
             holder = new ViewHolder(view);
             view.setTag(holder);
         }
-        String cardId = cardList.get(position).getId();
-        String cardImageURL = Constants.API_ROOT + "/card/render/" + cardId;
-        Ion.with(holder.imageView).load(cardImageURL);
-        holder.triggers.setText(TextUtils.join(", ", cardList.get(position).getTriggers()));
+        VideoResponse video = cardList.get(position);
+        Log.d(TAG, video.getUrl());
+        holder.videoTitle.setText(video.getName());
+        Ion.with(holder.videoThumb).load(video.getThumbnail());
+        holder.videoThumb.setBackgroundColor(0);
         return view;
     }
 
@@ -68,10 +69,10 @@ public class GeniusCardAdapter extends CardScrollAdapter {
     }
 
     static class ViewHolder {
-        @InjectView(R.id.image)
-        ImageView imageView;
-        @InjectView(R.id.triggers)
-        TextView triggers;
+        @InjectView(R.id.videoThumb)
+        ImageView videoThumb;
+        @InjectView(R.id.videoTitle)
+        TextView videoTitle;
 
         public ViewHolder(View view) {
             ButterKnife.inject(this, view);

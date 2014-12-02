@@ -31,4 +31,7 @@ public interface GlassGeniusAPI {
     @GET("/card/triggers")
     public abstract void getTriggers(Callback<JsonArray> cb);
 
+    @GET("/video")
+    public abstract void getAllVideos(Callback<List<VideoResponse>> cb);
+
 }

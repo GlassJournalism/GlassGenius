@@ -1,30 +1,46 @@
 package io.glassjournalism.glassgenius;
 
 import android.app.Activity;
-import android.media.MediaPlayer;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.glass.widget.CardScrollView;
+import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.glassjournalism.glassgenius.data.json.Constants;
+import io.glassjournalism.glassgenius.data.json.VideoResponse;
 
 public class POVActivity extends Activity {
 
     private final String TAG = "POVActivity";
-    @InjectView(R.id.statusText)
-    TextView loadingText;
+    private VideoCardAdapter videoCardAdapter;
     @InjectView(R.id.loading)
     LinearLayout loadingView;
-    @InjectView(R.id.videoView)
-    VideoView videoView;
+    @InjectView(R.id.cardScrollView)
+    CardScrollView mCardScroller;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCardScroller.activate();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mCardScroller.deactivate();
+    }
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -32,18 +48,30 @@ public class POVActivity extends Activity {
         setContentView(R.layout.activity_pov);
         ButterKnife.inject(this);
         Crashlytics.start(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        Uri videoUri = Uri.parse("http://dcarr.io/magic.mp4");
-        videoView.setBackgroundColor(0);
-        videoView.setVideoURI(videoUri);
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        videoCardAdapter = new VideoCardAdapter(POVActivity.this);
+        mCardScroller.setAdapter(videoCardAdapter);
+        mCardScroller.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                Log.d(TAG, "onPrepared");
-                loadingView.setVisibility(View.GONE);
-                videoView.start();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d(TAG, "onItemClick");
+                VideoResponse video = (VideoResponse) videoCardAdapter.getItem(i);
+                Intent videoIntent = new Intent(POVActivity.this, VideoPlaybackActivity.class);
+                videoIntent.putExtra("videoURL", video.getUrl());
+                startActivity(videoIntent);
             }
         });
+
+        Ion.with(this)
+                .load(Constants.API_ROOT + "/video")
+                .as(new TypeToken<List<VideoResponse>>() {
+                })
+                .setCallback(new FutureCallback<List<VideoResponse>>() {
+                    @Override
+                    public void onCompleted(Exception e, List<VideoResponse> videoResponses) {
+                        videoCardAdapter.addVideos(videoResponses);
+                        loadingView.setVisibility(View.GONE);
+                    }
+                });
+
     }
 }
