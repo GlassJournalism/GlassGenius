@@ -4,6 +4,34 @@
     android:layout_height="match_parent"
     tools:context="io.glassjournalism.glassgenius.fragments.CardHistoryFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/geniusConnectLayout">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/connectToGeniusSession"
+            android:id="@+id/geniusConnectText"
+            android:gravity="center"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/geniusConnectButton"
+            android:id="@+id/geniusConnectButton"
+            android:gravity="center" />
+    </LinearLayout>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,14 +39,7 @@
         android:paddingBottom="4dp"
         android:paddingTop="4dp"
         android:divider="@android:color/transparent"
-        android:id="@+id/cardListView"/>
-
-    <com.faizmalkani.floatingactionbutton.FloatingActionButton
-        android:id="@+id/sessionFab"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp" />
+        android:id="@+id/cardListView"
+        android:visibility="gone" />
 
 </FrameLayout>

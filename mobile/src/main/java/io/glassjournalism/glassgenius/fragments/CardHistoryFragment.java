@@ -9,15 +9,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AbsListView;
+import android.widget.ActionMenuView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.firebase.client.Firebase;
+import com.percolate.caffeine.MiscUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -40,22 +48,41 @@ public class CardHistoryFragment extends Fragment {
 
     @InjectView(R.id.cardListView)
     ListView cardListView;
-    @InjectView(R.id.sessionFab)
-    FloatingActionButton sessionFab;
+    @InjectView(R.id.geniusConnectLayout)
+    LinearLayout geniusConnectLayout;
+    @InjectView(R.id.geniusConnectButton)
+    Button geniusConnectButton;
+
+    Menu menu;
+    MenuItem disconnect;
 
     LayoutInflater layoutInflater;
     SharedPreferences sharedPrefs;
     View rootView;
 
-    @OnClick(R.id.sessionFab)
+    public void onDisconnectClick() {
+        cardListView.setVisibility(View.GONE);
+        cardListView.setAdapter(null);
+        cardListView.invalidate();
+        geniusConnectLayout.setVisibility(View.VISIBLE);
+        disconnect.setVisible(false);
+    }
+
+    @OnClick(R.id.geniusConnectButton)
     public void onSessionFabClick(View v) {
         // Set an EditText view to get user input
         final EditText input = new EditText(getActivity());
+        final LinearLayout linearLayout = new LinearLayout(getActivity());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.leftMargin = MiscUtils.dpToPx(getActivity(), 16);
+        lp.rightMargin = lp.leftMargin;
+        linearLayout.addView(input, lp);
+
         input.setText(sharedPrefs.getString("session", null));
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setTitle("Glass Genius Session")
                 .setMessage("Enter a session code")
-                .setView(input)
+                .setView(linearLayout)
                 .setNegativeButton("Close", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -72,6 +99,9 @@ public class CardHistoryFragment extends Fragment {
                             FirebaseAdapter adapter = new FirebaseAdapter(getActivity(), sessionRef.child(sessionID));
                             cardListView.invalidate();
                             cardListView.setAdapter(adapter);
+                            cardListView.setVisibility(View.VISIBLE);
+                            geniusConnectLayout.setVisibility(View.GONE);
+                            disconnect.setVisible(true);
                         } else {
                             input.setError("Enter a 5-digit session ID");
                         }
@@ -110,14 +140,18 @@ public class CardHistoryFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         layoutInflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_card_history, container, false);
         ButterKnife.inject(this, rootView);
-        sessionFab.setDrawable(getResources().getDrawable(R.drawable.ic_action_new));
-        sessionFab.setColor(getResources().getColor(R.color.pink_a400));
         sessionRef = new Firebase(Constants.FIREBASE_URL).child("sessions");
         sharedPrefs =  PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         return rootView;
@@ -145,6 +179,36 @@ public class CardHistoryFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        this.menu = menu;
+        inflater.inflate(R.menu.card_history, menu);
+
+        disconnect = menu.findItem(R.id.disconnect);
+        disconnect.setVisible(false);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuItem disconnect = menu.findItem(R.id.disconnect);
+        disconnect.setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.disconnect) {
+            onDisconnectClick();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
