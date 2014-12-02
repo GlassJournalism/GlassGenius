@@ -32,4 +32,9 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
+    <com.google.android.glass.widget.CardScrollView
+        android:id="@+id/cardScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>
