@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.VideoView;
 
 import butterknife.ButterKnife;
@@ -19,7 +18,7 @@ public class VideoPlaybackActivity extends Activity {
     @InjectView(R.id.videoView)
     VideoView videoView;
     @InjectView(R.id.loading)
-    LinearLayout loadingView;
+    View loading;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -38,7 +37,7 @@ public class VideoPlaybackActivity extends Activity {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
                 Log.d(TAG, "prepared");
-                loadingView.setVisibility(View.GONE);
+                loading.setVisibility(View.GONE);
             }
         });
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

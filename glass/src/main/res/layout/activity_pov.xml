@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:paddingTop="8dp"
+            android:paddingTop="16dp"
             android:text="POV Loading..."
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>

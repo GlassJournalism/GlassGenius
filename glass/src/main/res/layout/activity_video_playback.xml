@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/loading"
@@ -23,13 +27,17 @@
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
             android:paddingTop="8dp"
-            android:text="POV Loading..."
+            android:text="Video Loading..."
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/sessionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:paddingTop="8dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 
-    <VideoView
-        android:id="@+id/videoView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-</LinearLayout>
+</RelativeLayout>
