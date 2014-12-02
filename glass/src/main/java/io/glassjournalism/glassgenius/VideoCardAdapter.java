@@ -5,10 +5,12 @@ import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +25,13 @@ public class VideoCardAdapter extends CardScrollAdapter {
     private List<VideoResponse> cardList = new ArrayList<VideoResponse>();
     private Activity mActivity;
 
-    public VideoCardAdapter(Activity activity, List<VideoResponse> cardList) {
-        this.cardList = cardList;
+    public VideoCardAdapter(Activity activity) {
         this.mActivity = activity;
+        notifyDataSetChanged();
+    }
+
+    public void addVideos(List<VideoResponse> videoResponses) {
+        cardList.addAll(videoResponses);
         notifyDataSetChanged();
     }
 
@@ -50,17 +56,10 @@ public class VideoCardAdapter extends CardScrollAdapter {
             view.setTag(holder);
         }
         VideoResponse video = cardList.get(position);
+        Log.d(TAG, video.getUrl());
         holder.videoTitle.setText(video.getName());
-        final VideoView videoView = holder.videoView;
-        videoView.setBackgroundColor(0);
-        videoView.setVideoURI(Uri.parse(video.getUrl()));
-        videoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick");
-                videoView.start();
-            }
-        });
+        Ion.with(holder.videoThumb).load(video.getThumbnail());
+        holder.videoThumb.setBackgroundColor(0);
         return view;
     }
 
@@ -70,8 +69,8 @@ public class VideoCardAdapter extends CardScrollAdapter {
     }
 
     static class ViewHolder {
-        @InjectView(R.id.video)
-        VideoView videoView;
+        @InjectView(R.id.videoThumb)
+        ImageView videoThumb;
         @InjectView(R.id.videoTitle)
         TextView videoTitle;
 

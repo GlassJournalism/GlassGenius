@@ -9,6 +9,9 @@ public class VideoResponse {
     @Expose
     private String url;
 
+    @Expose
+    private String thumbnail;
+
     public String getName() {
         return name;
     }
@@ -23,5 +26,13 @@ public class VideoResponse {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
