@@ -49,5 +49,4 @@ dependencies {
     compile 'com.firebase:firebase-client-android:2.+'
     compile 'com.squareup.picasso:picasso:2.+'
     compile project(':genius-lib')
-    compile project(':filepicker-library')
 }

@@ -98,7 +98,6 @@
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="picasso-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="butterknife-5.1.2" level="project" />
-    <orderEntry type="module" module-name="filepicker-library" exported="" />
     <orderEntry type="module" module-name="genius-lib" exported="" />
   </component>
 </module>
