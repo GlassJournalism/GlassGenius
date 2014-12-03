@@ -1,1 +1,1 @@
-include ':mobile', ':glass', ':genius-lib', ':filepicker-library'
+include ':mobile', ':glass', ':genius-lib'

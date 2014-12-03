@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GlassGenius.iml" filepath="$PROJECT_DIR$/GlassGenius.iml" />
-      <module fileurl="file://$PROJECT_DIR$/filepicker-library/filepicker-library.iml" filepath="$PROJECT_DIR$/filepicker-library/filepicker-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/genius-lib/genius-lib.iml" filepath="$PROJECT_DIR$/genius-lib/genius-lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/glass/glass.iml" filepath="$PROJECT_DIR$/glass/glass.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
