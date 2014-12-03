@@ -15,7 +15,13 @@
         android:text="Title"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#90CAF9" />
+        android:textColor="#90CAF9"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="25"
+        android:shadowColor="@android:color/black"/>
 
 </RelativeLayout>

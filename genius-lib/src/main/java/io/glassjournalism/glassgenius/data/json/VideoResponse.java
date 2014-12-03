@@ -3,6 +3,10 @@ package io.glassjournalism.glassgenius.data.json;
 import com.google.gson.annotations.Expose;
 
 public class VideoResponse {
+
+    @Expose
+    private String id;
+
     @Expose
     private String name;
 
@@ -34,5 +38,13 @@ public class VideoResponse {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

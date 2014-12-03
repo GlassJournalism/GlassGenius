@@ -1,6 +1,7 @@
 package io.glassjournalism.glassgenius;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,11 @@ import android.widget.TextView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.koushikdutta.ion.Ion;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -22,14 +24,16 @@ public class VideoCardAdapter extends CardScrollAdapter {
 
     private final String TAG = getClass().getName();
     private List<VideoResponse> cardList = new ArrayList<VideoResponse>();
+    private Map<String, Bitmap> imageList = new HashMap<String, Bitmap>();
     private Activity mActivity;
+    private int videosLoaded = 0;
 
     public VideoCardAdapter(Activity activity) {
         this.mActivity = activity;
         notifyDataSetChanged();
     }
 
-    public void addVideos(List<VideoResponse> videoResponses) {
+    public void addVideos(final List<VideoResponse> videoResponses) {
         cardList.addAll(videoResponses);
         notifyDataSetChanged();
     }
@@ -57,11 +61,11 @@ public class VideoCardAdapter extends CardScrollAdapter {
         VideoResponse video = cardList.get(position);
         Log.d(TAG, video.getUrl());
         holder.videoTitle.setText(video.getName());
-        Picasso.with(mActivity).load(video.getThumbnail()).into(holder.videoThumb);
-//        Ion.with(holder.videoThumb).load(video.getThumbnail());
+        Ion.with(holder.videoThumb).load(video.getThumbnail());
         Log.d(TAG, video.getThumbnail());
         return view;
     }
+
 
     @Override
     public int getPosition(Object o) {
