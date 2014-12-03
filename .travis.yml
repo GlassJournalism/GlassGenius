@@ -3,6 +3,7 @@ android:
   components:
     - build-tools-21.1.1
     - extra-android-support
+    - addon-google_gdk-google-19
   licenses:
     - android-sdk-license-5be876d5 # new license!
     - '.*intel.+'
