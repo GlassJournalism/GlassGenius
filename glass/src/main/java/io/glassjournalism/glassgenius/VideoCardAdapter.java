@@ -1,16 +1,15 @@
 package io.glassjournalism.glassgenius;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +57,9 @@ public class VideoCardAdapter extends CardScrollAdapter {
         VideoResponse video = cardList.get(position);
         Log.d(TAG, video.getUrl());
         holder.videoTitle.setText(video.getName());
-        Ion.with(holder.videoThumb).load(video.getThumbnail());
-        holder.videoThumb.setBackgroundColor(0);
+        Picasso.with(mActivity).load(video.getThumbnail()).into(holder.videoThumb);
+//        Ion.with(holder.videoThumb).load(video.getThumbnail());
+        Log.d(TAG, video.getThumbnail());
         return view;
     }
 
