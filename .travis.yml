@@ -1,9 +1,8 @@
 language: android
-components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    # - platform-tools
-    # - tools
-
-    # The BuildTools version used by your project
+android:
+  components:
     - build-tools-21.1.1
+    - extra-android-support
+  licenses:
+    - android-sdk-license-5be876d5 # new license!
+    - '.*intel.+'
