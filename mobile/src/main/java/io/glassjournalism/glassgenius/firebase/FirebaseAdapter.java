@@ -58,19 +58,8 @@ public class FirebaseAdapter extends BaseAdapter {
                 CardFoundResponse card = dataSnapshot.getValue(CardFoundResponse.class);
                 cardNames.put(dataSnapshot.getKey(), card);
 
-                // Insert into the correct location, based on previousChildName
-                if (previousChildName == null) {
-                    cards.add(0, card);
-                } else {
-                    CardFoundResponse previousCard = cardNames.get(previousChildName);
-                    int previousIndex = cards.indexOf(previousCard);
-                    int nextIndex = previousIndex + 1;
-                    if (nextIndex == cards.size()) {
-                        cards.add(card);
-                    } else {
-                        cards.add(nextIndex, card);
-                    }
-                }
+                cards.add(0, card);
+
                 notifyDataSetChanged();
 
             }
