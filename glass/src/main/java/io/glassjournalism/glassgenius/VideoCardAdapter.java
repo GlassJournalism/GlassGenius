@@ -26,7 +26,6 @@ public class VideoCardAdapter extends CardScrollAdapter {
     private List<VideoResponse> cardList = new ArrayList<VideoResponse>();
     private Map<String, Bitmap> imageList = new HashMap<String, Bitmap>();
     private Activity mActivity;
-    private int videosLoaded = 0;
 
     public VideoCardAdapter(Activity activity) {
         this.mActivity = activity;

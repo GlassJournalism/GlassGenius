@@ -1,17 +1,14 @@
 package io.glassjournalism.glassgenius.firebase;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.firebase.client.ChildEventListener;
@@ -19,8 +16,8 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
+import com.koushikdutta.ion.Ion;
 import com.percolate.caffeine.MiscUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,7 +130,7 @@ public class FirebaseAdapter extends BaseAdapter {
         holder.cardTitle.setText(card.getName());
         String cardImageURL = Constants.API_ROOT + "/card/render/" + card.getId();
         Log.d(TAG, cardImageURL);
-        Picasso.with(mActivity).load(cardImageURL).into(holder.cardImage);
+        Ion.with(holder.cardImage).load(cardImageURL);
 
         int width = mActivity.getResources().getDisplayMetrics().widthPixels;
         int widthPicture = width - MiscUtils.dpToPx(mActivity, 16);

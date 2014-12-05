@@ -47,6 +47,6 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.+'
     compile 'com.jakewharton:butterknife:5.1.2'
     compile 'com.firebase:firebase-client-android:2.+'
-    compile 'com.squareup.picasso:picasso:2.+'
+    compile 'com.koushikdutta.ion:ion:2.+'
     compile project(':genius-lib')
 }
