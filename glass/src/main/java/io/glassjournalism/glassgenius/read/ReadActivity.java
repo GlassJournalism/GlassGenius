@@ -42,6 +42,8 @@ public class ReadActivity extends Activity {
     private AudioManager audio;
 
     public final static String EXTRA_MESSAGE = "ARTICLE_TEXT";
+    public final static String SOURCE_URL = "SOURCE_URL";
+
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -57,6 +59,7 @@ public class ReadActivity extends Activity {
                 audio.playSoundEffect(Sounds.TAP);
                 Intent intent = new Intent(ReadActivity.this, SpeedReader.class);
                 intent.putExtra(EXTRA_MESSAGE, articleList.get(i).getContents());
+                intent.putExtra(SOURCE_URL, articleList.get(i).getSource());
                 startActivity(intent);
             }
         });

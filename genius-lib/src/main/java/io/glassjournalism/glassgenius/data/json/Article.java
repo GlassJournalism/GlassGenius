@@ -18,6 +18,8 @@ public class Article {
     private String thumbnailURL;
     @Expose
     private String iconURL;
+    @Expose
+    private String source;
 
     public String getTitle() {
         return title;
@@ -74,5 +76,13 @@ public class Article {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/view_source"
+        android:icon="@drawable/glass_genius_glass"
+        android:title="View Source" />
+</menu>

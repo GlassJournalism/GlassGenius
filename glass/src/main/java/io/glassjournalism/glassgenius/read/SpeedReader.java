@@ -2,8 +2,13 @@ package io.glassjournalism.glassgenius.read;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -16,6 +21,38 @@ public class SpeedReader extends Activity {
     int WPM = 500;
     int index = 0;
     String[] words;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.read_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            openOptionsMenu();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection. Menu items typically start another
+        // activity, start a service, or broadcast another intent.
+        switch (item.getItemId()) {
+            case R.id.view_source:
+                String url = getIntent().getStringExtra(ReadActivity.SOURCE_URL);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +80,6 @@ public class SpeedReader extends Activity {
                 handle.postDelayed(timer, 60000 / WPM);
             }
         }
-        //TODO add pause at . and ,
     };
 
     @Override
