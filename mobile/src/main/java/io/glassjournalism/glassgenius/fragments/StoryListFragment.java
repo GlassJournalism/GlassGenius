@@ -51,7 +51,6 @@ public class StoryListFragment extends Fragment {
     private View view;
     private ScrollView scrollView;
     private LinearLayout scrollViewLinearLayout;
-    private FloatingActionButton floatingActionButton;
 
     /**
      * Use this factory method to create a new instance of
@@ -93,18 +92,6 @@ public class StoryListFragment extends Fragment {
         // Bind views
         scrollView = (ScrollView) view.findViewById(R.id.scrollView);
         scrollViewLinearLayout = (LinearLayout) view.findViewById(R.id.scrollViewLinearLayout);
-        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
-
-        floatingActionButton.listenToScrollView(scrollView);
-        floatingActionButton.setColor(getResources().getColor(R.color.pink_a400));
-        floatingActionButton.setDrawable(getResources().getDrawable(R.drawable.ic_action_new));
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showNewStoryDialog();
-            }
-        });
 
         loadStories();
 

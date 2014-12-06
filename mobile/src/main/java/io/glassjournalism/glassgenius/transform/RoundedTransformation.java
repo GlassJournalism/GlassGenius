@@ -7,9 +7,9 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 
-import com.squareup.picasso.Transformation;
+import com.koushikdutta.ion.bitmap.Transform;
 
-public class RoundedTransformation implements Transformation {
+public class RoundedTransformation implements Transform {
     public int radius;
 
     public RoundedTransformation(int radius) {

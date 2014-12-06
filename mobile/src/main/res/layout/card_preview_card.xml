@@ -1,98 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:elevation="6dp">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.v7.widget.CardView
+        android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:elevation="6dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/titleLinearLayout">
+            android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/cardTitle"
-                android:text="Demonstration Card"
-                android:fontFamily="sans-serif-light"
-                android:layout_margin="16dp"
-                android:textSize="18sp"/>
+                android:orientation="horizontal"
+                android:id="@+id/titleLinearLayout">
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="56dp"
-                android:layout_weight="0"
-                android:id="@+id/cardOverflowButton"
-                android:src="@drawable/ic_action_overflow_dark"
-                android:scaleType="center"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/cardTitle"
+                    android:text="Demonstration Card"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_margin="16dp"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:id="@+id/cardImageLayout">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progressBar"
+                    android:layout_gravity="center" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:id="@+id/cardImageView" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/cardOptionsLinearLayout">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Show 5 trigger phrases"
+                    android:textColor="@color/grey_700"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:padding="16dp"
+                    android:id="@+id/triggerWordTitle" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/triggerWordToggle"
+                    android:src="@drawable/ic_arrow_drop_down"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="4dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/triggerWordLinearLayout"
+                android:visibility="gone"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"></LinearLayout>
 
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:id="@+id/cardImageLayout">
+    </android.support.v7.widget.CardView>
 
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/progressBar"
-                android:layout_gravity="center" />
-
-            <WebView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/cardWebView" />
-
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/cardOptionsLinearLayout">
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Show 5 trigger phrases"
-                android:textColor="@color/grey_700"
-                android:fontFamily="sans-serif-light"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:padding="16dp"
-                android:id="@+id/triggerWordTitle" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/triggerWordToggle"
-                android:src="@drawable/ic_arrow_drop_down"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="4dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/triggerWordLinearLayout"
-            android:visibility="gone"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"></LinearLayout>
-
-    </LinearLayout>
-
-</android.support.v7.widget.CardView>
+</FrameLayout>

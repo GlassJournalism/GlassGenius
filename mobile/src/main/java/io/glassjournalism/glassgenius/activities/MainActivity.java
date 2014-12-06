@@ -19,16 +19,12 @@ import com.firebase.client.Firebase;
 
 import java.io.File;
 
-import io.filepicker.FilePickerAPI;
 import io.glassjournalism.glassgenius.FilePickerImageResponse;
 import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.fragments.CardHistoryFragment;
-import io.glassjournalism.glassgenius.fragments.GlassCardCreationFragment;
 import io.glassjournalism.glassgenius.fragments.NavigationDrawerFragment;
-import io.glassjournalism.glassgenius.fragments.PhotoListFragment;
 import io.glassjournalism.glassgenius.fragments.StoryFragment;
 import io.glassjournalism.glassgenius.fragments.StoryListFragment;
-import io.glassjournalism.glassgenius.fragments.VideoListFragment;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -39,7 +35,7 @@ import retrofit.mime.TypedFile;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, StoryListFragment.OnFragmentInteractionListener, StoryFragment.OnFragmentInteractionListener, PhotoListFragment.OnFragmentInteractionListener, VideoListFragment.OnFragmentInteractionListener, GlassCardCreationFragment.OnFragmentInteractionListener, CardHistoryFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, StoryListFragment.OnFragmentInteractionListener, StoryFragment.OnFragmentInteractionListener, CardHistoryFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -89,8 +85,6 @@ public class MainActivity extends ActionBarActivity
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        FilePickerAPI.setKey(FILEPICKER_API_KEY);
     }
 
     @Override
@@ -106,12 +100,6 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 1:
                 fragment = StoryListFragment.newInstance("", "");
-                break;
-            case 2:
-                fragment = PhotoListFragment.newInstance("", "");
-                break;
-            case 3:
-                fragment = VideoListFragment.newInstance("", "");
                 break;
             default:
                 fragment = CardHistoryFragment.newInstance("", "");

@@ -18,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.koushikdutta.ion.Ion;
 import com.percolate.caffeine.MiscUtils;
 
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.glassjournalism.glassgenius.R;
+import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCard;
 import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
 import retrofit.Callback;
@@ -56,7 +58,6 @@ public class StoryFragment extends Fragment {
 
     @InjectView(R.id.scrollView) ScrollView scrollView;
     @InjectView(R.id.scrollViewLinearLayout) LinearLayout scrollViewLinearLayout;
-    @InjectView(R.id.fab) FloatingActionButton floatingActionButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -98,17 +99,6 @@ public class StoryFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_story, container, false);
 
         ButterKnife.inject(this, view);
-
-        floatingActionButton.listenToScrollView(scrollView);
-        floatingActionButton.setColor(getResources().getColor(R.color.pink_a400));
-        floatingActionButton.setDrawable(getResources().getDrawable(R.drawable.ic_action_new));
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openNewGlassCardFragment();
-            }
-        });
 
         loadCards();
 
@@ -200,16 +190,7 @@ public class StoryFragment extends Fragment {
         int wvHeight = (int) (9.f/16.f) * wvWidth;
         int scalePercent = (int) (((double) wvWidth)/640.f * 100);
 
-        WebView webView = (WebView) view.findViewById(R.id.cardWebView);
-        webView.setInitialScale(scalePercent);
-        webView.loadUrl("http://glacial-ridge-6503.herokuapp.com/card/preview/" + geniusCard.getId());
-//        webView.setWebChromeClient(new WebChromeClient() {
-//
-//            public void onProgressChanged(WebView webView, int progress) {
-//                new Background(webView, cardImage).execute();
-//                Log.i(getTag(), "WebView done loading card.");
-//            }
-//        });
+        ImageView imageView = (ImageView) view.findViewById(R.id.cardImageView);
 
         List<String> triggerWords = geniusCard.getTriggerWords();
 
@@ -245,6 +226,9 @@ public class StoryFragment extends Fragment {
         }
 
         scrollViewLinearLayout.addView(view);
+
+        Ion.with(imageView).load(Constants.API_ROOT + "/card/render/" + geniusCard.getId());
+
     }
 
     public void loadCards() {
