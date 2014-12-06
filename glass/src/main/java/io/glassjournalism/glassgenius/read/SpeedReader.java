@@ -1,7 +1,9 @@
 package io.glassjournalism.glassgenius.read;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,8 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.android.glass.media.Sounds;
+
 import io.glassjournalism.glassgenius.R;
 
 
@@ -21,6 +25,7 @@ public class SpeedReader extends Activity {
     int WPM = 500;
     int index = 0;
     String[] words;
+    private AudioManager audio;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -32,6 +37,7 @@ public class SpeedReader extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            audio.playSoundEffect(Sounds.TAP);
             openOptionsMenu();
             return true;
         }
@@ -58,6 +64,7 @@ public class SpeedReader extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         Intent intent = getIntent();
         String toSplit = intent.getStringExtra(ReadActivity.EXTRA_MESSAGE);
         words = toSplit.split("[,\\s]+");

@@ -36,6 +36,8 @@ public class ReadActivity extends Activity {
     private final String TAG = getClass().getName();
     @InjectView(R.id.cardScrollView)
     CardScrollView mCardScroller;
+    @InjectView(R.id.loading)
+    View loadingView;
     private List<CardBuilder> mCards = new ArrayList<CardBuilder>();
     private List<Article> articleList = new ArrayList<Article>();
     private ArticleCardScrollAdapter mAdapter;
@@ -154,6 +156,7 @@ public class ReadActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             mAdapter.notifyDataSetChanged();
+            loadingView.setVisibility(View.GONE);
         }
     }
 

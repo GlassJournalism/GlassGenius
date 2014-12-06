@@ -36,6 +36,8 @@ public class POVActivity extends Activity {
     private VideoCardAdapter videoCardAdapter;
     @InjectView(R.id.cardScrollView)
     CardScrollView mCardScroller;
+    @InjectView(R.id.loading)
+    View loadingView;
     private AudioManager audio;
     private List<CardBuilder> cardList = new ArrayList<CardBuilder>();
     private List<VideoResponse> videoList = new ArrayList<VideoResponse>();
@@ -110,6 +112,7 @@ public class POVActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             videoCardAdapter.notifyDataSetChanged();
+            loadingView.setVisibility(View.GONE);
         }
     }
 
