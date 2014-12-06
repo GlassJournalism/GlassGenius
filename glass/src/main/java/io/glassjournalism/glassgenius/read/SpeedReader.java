@@ -39,6 +39,10 @@ public class SpeedReader extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+            return true;
+        }
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
             paused = true;
             audio.playSoundEffect(Sounds.TAP);
@@ -53,6 +57,10 @@ public class SpeedReader extends Activity {
         // Handle item selection. Menu items typically start another
         // activity, start a service, or broadcast another intent.
         switch (item.getItemId()) {
+            case R.id.restart:
+                index = 0;
+                paused = false;
+                return true;
             case R.id.view_source:
                 String url = getIntent().getStringExtra(ReadActivity.SOURCE_URL);
                 Intent intent = new Intent(Intent.ACTION_VIEW);

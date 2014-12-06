@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -48,6 +49,15 @@ public class ReadActivity extends Activity {
 
     public final static String EXTRA_MESSAGE = "ARTICLE_TEXT";
     public final static String SOURCE_URL = "SOURCE_URL";
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -134,6 +144,7 @@ public class ReadActivity extends Activity {
 
         @Override
         protected Void doInBackground(Article... articles) {
+            Log.d(TAG, "doInBackground");
             Article article = articles[0];
             Bitmap icon = null;
             Bitmap image = null;
@@ -167,6 +178,7 @@ public class ReadActivity extends Activity {
 
         @Override
         protected void onPostExecute(Void result) {
+            Log.d(TAG, "onPostExeucte");
             mAdapter.notifyDataSetChanged();
             loadingView.setVisibility(View.GONE);
         }
