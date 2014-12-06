@@ -22,7 +22,7 @@ import io.glassjournalism.glassgenius.R;
 public class SpeedReader extends Activity {
 
     TextView flash_me;
-    int WPM = 500;
+    public static int WPM = 500;
     int index = 0;
     String[] words;
     private AudioManager audio;

@@ -142,11 +142,20 @@ public class ReadActivity extends Activity {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
+            int length = article.getContents().split("[,\\s]+").length;
+            int minutes = length/SpeedReader.WPM;
+            String time;
+            if (minutes <= 1) {
+                time = "Less than 1 minute";
+            } else {
+                time = minutes + " minutes";
+            }
             mCards.add(new CardBuilder(ReadActivity.this, CardBuilder.Layout.AUTHOR)
                     .setText(article.getTitle())
                     .setHeading(article.getPublication())
                     .setSubheading(article.getAuthor())
-                    .setFootnote(article.getDate())
+                    .setFootnote(time)
+                    .setTimestamp(article.getDate())
                     .setIcon(icon)
                     .setAttributionIcon(R.drawable.glass_genius_glass)
                     .addImage(image));
