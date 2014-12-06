@@ -40,8 +40,8 @@ public class POVActivity extends Activity {
     @InjectView(R.id.loading)
     View loadingView;
     private AudioManager audio;
-    private List<CardBuilder> cardList = new ArrayList<CardBuilder>();
-    private List<VideoResponse> videoList = new ArrayList<VideoResponse>();
+
+    private List<GeniusBuilder> builders = new ArrayList<GeniusBuilder>();
 
     @Override
     protected void onResume() {
@@ -91,31 +91,33 @@ public class POVActivity extends Activity {
                 .setCallback(new FutureCallback<List<VideoResponse>>() {
                     @Override
                     public void onCompleted(Exception e, List<VideoResponse> videoResponses) {
-                        videoList.addAll(videoResponses);
-                        for (VideoResponse videoResponse : videoResponses) {
-                            new FetchVideoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, videoResponse);
+                        for (VideoResponse video : videoResponses) {
+                            GeniusBuilder builder = new GeniusBuilder();
+                            builder.video = video;
+
+                            new FetchVideoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, builder);
                         }
                     }
                 });
 
     }
 
-    private class FetchVideoTask extends AsyncTask<VideoResponse, Void, Void> {
+    private class FetchVideoTask extends AsyncTask<GeniusBuilder, Void, Void> {
 
         @Override
-        protected Void doInBackground(VideoResponse... videoResponses) {
-            VideoResponse videoResponse = videoResponses[0];
+        protected Void doInBackground(GeniusBuilder... params) {
+            GeniusBuilder builder = params[0];
             Bitmap image = null;
             try {
-                image = Ion.with(POVActivity.this).load(videoResponse.getThumbnail()).asBitmap().get();
+                image = Ion.with(POVActivity.this).load(builder.video.getThumbnail()).asBitmap().get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            cardList.add(new CardBuilder(POVActivity.this, CardBuilder.Layout.TITLE)
-                    .setText(videoResponse.getName())
-                    .addImage(image));
+            builder.builder = new CardBuilder(POVActivity.this, CardBuilder.Layout.TITLE)
+                    .setText(builder.video.getName())
+                    .addImage(image);
             return null;
         }
 
@@ -129,22 +131,27 @@ public class POVActivity extends Activity {
     private class VideoCardAdapter extends CardScrollAdapter {
         @Override
         public int getCount() {
-            return cardList.size();
+            return builders.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return videoList.get(position);
+            return builders.get(position);
         }
 
         @Override
         public View getView(int position, View view, ViewGroup parent) {
-            return cardList.get(position).getView(view, parent);
+            return builders.get(position).builder.getView(view, parent);
         }
 
         @Override
         public int getPosition(Object o) {
             return 0;
         }
+    }
+
+    private class GeniusBuilder {
+        public CardBuilder builder;
+        public VideoResponse video;
     }
 }
