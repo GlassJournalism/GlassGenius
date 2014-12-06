@@ -13,7 +13,7 @@ import io.glassjournalism.glassgenius.R;
 public class SpeedReader extends Activity {
 
     TextView flash_me;
-    int WPM = 600;
+    int WPM = 500;
     int index = 0;
     String[] words;
 
@@ -23,7 +23,7 @@ public class SpeedReader extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Intent intent = getIntent();
         String toSplit = intent.getStringExtra(ReadActivity.EXTRA_MESSAGE);
-        words = toSplit.split(" ");
+        words = toSplit.split("[,\\s]+");
 
         setContentView(R.layout.activity_speed_reader);
         flash_me = (TextView) findViewById(R.id.flash);
