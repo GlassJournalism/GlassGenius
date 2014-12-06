@@ -14,7 +14,7 @@
         android:icon="@drawable/glass_genius_glass"
         android:label="@string/app_name_glass">
         <activity
-            android:name="io.glassjournalism.glassgenius.MainActivity"
+            android:name=".engine.MainActivity"
             android:icon="@drawable/glass_genius_glass"
             android:label="@string/title_activity_main">
             <intent-filter>
@@ -26,7 +26,7 @@
                 android:resource="@xml/voice_trigger_genius" />
         </activity>
         <activity
-            android:name="io.glassjournalism.glassgenius.POVActivity"
+            android:name=".video.POVActivity"
             android:icon="@drawable/glass_genius_glass"
             android:label="@string/title_activity_main">
             <intent-filter>
@@ -39,12 +39,30 @@
         </activity>
 
         <activity
-            android:name="io.glassjournalism.glassgenius.VideoPlaybackActivity"
+            android:name=".read.ReadActivity"
+            android:icon="@drawable/glass_genius_glass"
+            android:label="@string/title_activity_main">
+            <intent-filter>
+                <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="com.google.android.glass.VoiceTrigger"
+                android:resource="@xml/voice_trigger_read" />
+        </activity>
+
+        <activity
+            android:name=".read.SpeedReader"
+            android:icon="@drawable/glass_genius_glass"
+            android:label="@string/title_activity_main" />
+
+        <activity
+            android:name=".video.VideoPlaybackActivity"
             android:icon="@drawable/glass_genius_glass"
             android:label="@string/title_activity_main" />
 
         <service
-            android:name="io.glassjournalism.glassgenius.TransientAudioService"
+            android:name=".engine.TransientAudioService"
             android:enabled="true"
             android:exported="false" />
 

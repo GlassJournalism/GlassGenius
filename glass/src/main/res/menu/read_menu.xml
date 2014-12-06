@@ -1,0 +1,27 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item-->
+        <!--android:id="@+id/play_pause"-->
+        <!--android:icon="@android:drawable/ic_media_play"-->
+        <!--android:title="Play/Pause" />-->
+    <item
+        android:id="@+id/restart"
+        android:icon="@android:drawable/ic_media_rew"
+        android:title="Restart" />
+    <item
+        android:id="@+id/view_source"
+        android:icon="@drawable/glass_genius_glass"
+        android:title="View Source" />
+    <item
+        android:id="@+id/speed_250"
+        android:icon="@drawable/glass_genius_glass"
+        android:title="250 WPM" />
+    <item
+        android:id="@+id/speed_500"
+        android:icon="@drawable/glass_genius_glass"
+        android:title="500 WPM" />
+    <item
+        android:id="@+id/speed_750"
+        android:icon="@drawable/glass_genius_glass"
+        android:title="750 WPM" />
+
+</menu>

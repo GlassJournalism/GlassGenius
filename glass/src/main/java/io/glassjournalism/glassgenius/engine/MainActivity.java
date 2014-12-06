@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.engine;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
 import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.GeniusCardListener;
@@ -113,6 +114,10 @@ public class MainActivity extends Activity implements GeniusCardListener, Genius
 
     @Override
     public boolean onKeyDown(int keycode, KeyEvent event) {
+        if (keycode == KeyEvent.KEYCODE_BACK) {
+            finish();
+            return true;
+        }
         if (keycode == KeyEvent.KEYCODE_DPAD_CENTER && canClick) {
             canClick = false;
             mAudioService.setCardListener(MainActivity.this);

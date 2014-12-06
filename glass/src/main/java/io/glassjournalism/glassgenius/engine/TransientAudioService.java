@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.engine;
 
 import android.app.Service;
 import android.content.Intent;
