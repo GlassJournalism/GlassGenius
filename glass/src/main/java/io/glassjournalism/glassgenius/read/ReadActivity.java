@@ -1,8 +1,10 @@
 package io.glassjournalism.glassgenius.read;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,66 +12,70 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.google.android.glass.media.Sounds;
 import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
+import com.google.gson.reflect.TypeToken;
+import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.data.json.Article;
-import io.glassjournalism.glassgenius.data.json.GlassGeniusAPI;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import io.glassjournalism.glassgenius.data.json.Constants;
 
 
 public class ReadActivity extends Activity {
 
     private final String TAG = getClass().getName();
-    private CardScrollView mCardScroller;
-    private List<CardBuilder> mCards;
+    @InjectView(R.id.cardScrollView)
+    CardScrollView mCardScroller;
+    private List<CardBuilder> mCards = new ArrayList<CardBuilder>();
     private List<Article> articleList = new ArrayList<Article>();
     private ArticleCardScrollAdapter mAdapter;
+    private AudioManager audio;
 
     public final static String EXTRA_MESSAGE = "ARTICLE_TEXT";
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-
+        setContentView(R.layout.activity_read);
+        ButterKnife.inject(this);
+        audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAdapter = new ArticleCardScrollAdapter();
-        mCardScroller = new CardScrollView(ReadActivity.this);
         mCardScroller.setAdapter(mAdapter);
-        setContentView(mCardScroller);
-        mCardScroller.activate();
         mCardScroller.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                audio.playSoundEffect(Sounds.TAP);
                 Intent intent = new Intent(ReadActivity.this, SpeedReader.class);
                 intent.putExtra(EXTRA_MESSAGE, articleList.get(i).getContents());
                 startActivity(intent);
             }
         });
 
-        GlassGeniusAPI.GlassGeniusAPI.getArticles(new Callback<List<Article>>() {
-            @Override
-            public void success(final List<Article> articles, Response response) {
-                mCards = new ArrayList<CardBuilder>();
-                articleList.addAll(articles);
-                for (Article article : articles) {
-                    new FetchArticleTask().execute(article);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, error.getResponse().getReason() + " " + error.getUrl());
-            }
-        });
+        Ion.with(this)
+                .load(Constants.API_ROOT + "/article")
+                .as(new TypeToken<List<Article>>() {
+                })
+                .setCallback(new FutureCallback<List<Article>>() {
+                    @Override
+                    public void onCompleted(Exception e, List<Article> articles) {
+                        if (null != e) Log.d(TAG, e.getMessage());
+                        articleList.addAll(articles);
+                        Log.d(TAG, "article count: " + articles.size());
+                        for (Article article : articles) {
+                            new FetchArticleTask().execute(article);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -132,14 +138,19 @@ public class ReadActivity extends Activity {
                 e.printStackTrace();
             }
             mCards.add(new CardBuilder(ReadActivity.this, CardBuilder.Layout.AUTHOR)
-                    .setHeading(article.getTitle())
-                    .setSubheading(article.getLocation())
-                    .setFootnote(article.getDates())
+                    .setText(article.getTitle())
+                    .setHeading(article.getPublication())
+                    .setSubheading(article.getAuthor())
+                    .setFootnote(article.getDate())
                     .setIcon(icon)
                     .setAttributionIcon(R.drawable.glass_genius_glass)
                     .addImage(image));
-            mAdapter.notifyDataSetChanged();
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 

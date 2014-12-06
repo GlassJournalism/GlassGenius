@@ -1,12 +1,22 @@
 package io.glassjournalism.glassgenius.data.json;
 
+import com.google.gson.annotations.Expose;
+
 public class Article {
 
+    @Expose
     private String title;
+    @Expose
     private String contents;
+    @Expose
     private String date;
-    private String location;
+    @Expose
+    private String publication;
+    @Expose
+    private String author;
+    @Expose
     private String thumbnailURL;
+    @Expose
     private String iconURL;
 
     public String getTitle() {
@@ -49,11 +59,20 @@ public class Article {
         this.iconURL = iconURL;
     }
 
-    public String getLocation() {
-        return location;
+
+    public String getPublication() {
+        return publication;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setPublication(String publication) {
+        this.publication = publication;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }
