@@ -1,12 +1,10 @@
 package io.glassjournalism.glassgenius.data.json;
 
-import java.util.ArrayList;
-
 public class Article {
 
     private String title;
     private String contents;
-    private String dates;
+    private String date;
     private String location;
     private String thumbnailURL;
     private String iconURL;
@@ -27,12 +25,12 @@ public class Article {
         this.contents = contents;
     }
 
-    public String getDates() {
-        return dates;
+    public String getDate() {
+        return date;
     }
 
-    public void setDates(String dates) {
-        this.dates = dates;
+    public void setDate(String dates) {
+        this.date = dates;
     }
 
     public String getThumbnailURL() {
