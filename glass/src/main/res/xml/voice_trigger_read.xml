@@ -1,0 +1,2 @@
+<!-- For more information about io.glassjournalism.glassgenius.voice trigger, check out: https://developers.google.com/glass/develop/gdk/starting-glassware -->
+<trigger command="SHOW_ME_THE_NEWS" />

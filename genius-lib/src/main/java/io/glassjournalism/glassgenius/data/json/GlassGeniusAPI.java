@@ -34,4 +34,7 @@ public interface GlassGeniusAPI {
     @GET("/video")
     public abstract void getAllVideos(Callback<List<VideoResponse>> cb);
 
+    @GET("/articles")
+    public abstract void getArticles(Callback<List<Article>> cb);
+
 }

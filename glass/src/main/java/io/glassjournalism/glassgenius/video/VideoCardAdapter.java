@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.video;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -18,6 +18,7 @@ import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.data.json.VideoResponse;
 
 public class VideoCardAdapter extends CardScrollAdapter {

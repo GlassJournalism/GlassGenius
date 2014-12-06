@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.video;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.data.json.Constants;
 import io.glassjournalism.glassgenius.data.json.VideoResponse;
 

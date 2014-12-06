@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.video;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -11,6 +11,7 @@ import android.widget.VideoView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.glassjournalism.glassgenius.R;
 
 public class VideoPlaybackActivity extends Activity {
 

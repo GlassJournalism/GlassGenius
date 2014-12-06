@@ -1,4 +1,4 @@
-package io.glassjournalism.glassgenius;
+package io.glassjournalism.glassgenius.engine;
 
 import android.app.Activity;
 import android.text.TextUtils;
@@ -16,6 +16,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import io.glassjournalism.glassgenius.R;
 import io.glassjournalism.glassgenius.data.json.CardFoundResponse;
 import io.glassjournalism.glassgenius.data.json.Constants;
 
