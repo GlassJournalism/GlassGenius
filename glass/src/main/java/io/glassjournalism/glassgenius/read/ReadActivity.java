@@ -51,15 +51,6 @@ public class ReadActivity extends Activity {
     public final static String SOURCE_URL = "SOURCE_URL";
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_read);

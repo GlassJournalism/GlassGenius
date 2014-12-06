@@ -39,10 +39,6 @@ public class SpeedReader extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-            return true;
-        }
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
             paused = true;
             audio.playSoundEffect(Sounds.TAP);

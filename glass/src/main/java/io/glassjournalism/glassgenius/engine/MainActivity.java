@@ -114,10 +114,6 @@ public class MainActivity extends Activity implements GeniusCardListener, Genius
 
     @Override
     public boolean onKeyDown(int keycode, KeyEvent event) {
-        if (keycode == KeyEvent.KEYCODE_BACK) {
-            finish();
-            return true;
-        }
         if (keycode == KeyEvent.KEYCODE_DPAD_CENTER && canClick) {
             canClick = false;
             mAudioService.setCardListener(MainActivity.this);
