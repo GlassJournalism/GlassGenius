@@ -24,7 +24,9 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.ButterKnife;
@@ -42,7 +44,7 @@ public class ReadActivity extends Activity {
     @InjectView(R.id.loading)
     View loadingView;
     private List<CardBuilder> mCards = new ArrayList<CardBuilder>();
-    private List<Article> articleList = new ArrayList<Article>();
+    private Map<CardBuilder, Article> articleMap = new HashMap<CardBuilder, Article>();
     private ArticleCardScrollAdapter mAdapter;
     private AudioManager audio;
     SharedPreferences sharedPrefs;
@@ -63,9 +65,11 @@ public class ReadActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 audio.playSoundEffect(Sounds.TAP);
+                CardBuilder card = (CardBuilder) mAdapter.getItem(i);
+                Article article = articleMap.get(card);
                 Intent intent = new Intent(ReadActivity.this, SpeedReader.class);
-                intent.putExtra(EXTRA_MESSAGE, articleList.get(i).getContents());
-                intent.putExtra(SOURCE_URL, articleList.get(i).getSource());
+                intent.putExtra(EXTRA_MESSAGE, article.getContents());
+                intent.putExtra(SOURCE_URL, article.getSource());
                 startActivity(intent);
             }
         });
@@ -78,7 +82,6 @@ public class ReadActivity extends Activity {
                     @Override
                     public void onCompleted(Exception e, List<Article> articles) {
                         if (null != e) Log.d(TAG, e.getMessage());
-                        articleList.addAll(articles);
                         Log.d(TAG, "article count: " + articles.size());
                         for (Article article : articles) {
                             new FetchArticleTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, article);
@@ -155,7 +158,7 @@ public class ReadActivity extends Activity {
             } else {
                 time = minutes + " minutes";
             }
-            mCards.add(new CardBuilder(ReadActivity.this, CardBuilder.Layout.AUTHOR)
+            CardBuilder newCard = new CardBuilder(ReadActivity.this, CardBuilder.Layout.AUTHOR)
                     .setText(article.getTitle())
                     .setHeading(article.getPublication())
                     .setSubheading(article.getAuthor())
@@ -163,7 +166,9 @@ public class ReadActivity extends Activity {
                     .setTimestamp(article.getDate())
                     .setIcon(icon)
                     .setAttributionIcon(R.drawable.glass_genius_glass)
-                    .addImage(image));
+                    .addImage(image);
+            mCards.add(newCard);
+            articleMap.put(newCard, article);
             return null;
         }
 

@@ -43,7 +43,6 @@ public class POVActivity extends Activity {
     View loadingView;
     private AudioManager audio;
     private List<CardBuilder> cardList = new ArrayList<CardBuilder>();
-    private List<VideoResponse> videoList = new ArrayList<VideoResponse>();
     private Map<CardBuilder, String> videoMap = new HashMap<CardBuilder, String>();
 
     @Override
@@ -86,7 +85,6 @@ public class POVActivity extends Activity {
                 .setCallback(new FutureCallback<List<VideoResponse>>() {
                     @Override
                     public void onCompleted(Exception e, List<VideoResponse> videoResponses) {
-                        videoList.addAll(videoResponses);
                         for (VideoResponse videoResponse : videoResponses) {
                             new FetchVideoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, videoResponse);
                         }
