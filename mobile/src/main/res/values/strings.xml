@@ -18,7 +18,7 @@
     <string name="geniusConnectButton">Connect to Glass Genius</string>
 
     <string name="template_spinner_prompt">Select a template</string>
-    <string name="app_name_mobile">Glass Genius - Mobile</string>
+    <string name="app_name_mobile">Glass Genius</string>
 
     <string-array name="glass_template_spinner_array">
         <item>Text only</item>
