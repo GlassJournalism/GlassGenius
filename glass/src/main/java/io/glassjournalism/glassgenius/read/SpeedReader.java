@@ -60,16 +60,16 @@ public class SpeedReader extends Activity {
                 startActivity(intent);
                 paused = false;
                 return true;
-            case R.id.speed_400:
-                sharedPrefs.edit().putInt("WPM", 400).apply();
+            case R.id.speed_250:
+                sharedPrefs.edit().putInt("WPM", 250).apply();
                 paused = false;
                 return true;
             case R.id.speed_500:
                 sharedPrefs.edit().putInt("WPM", 500).apply();
                 paused = false;
                 return true;
-            case R.id.speed_600:
-                sharedPrefs.edit().putInt("WPM", 600).apply();
+            case R.id.speed_750:
+                sharedPrefs.edit().putInt("WPM", 700).apply();
                 paused = false;
                 return true;
             default:

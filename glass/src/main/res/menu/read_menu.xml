@@ -4,15 +4,15 @@
         android:icon="@drawable/glass_genius_glass"
         android:title="View Source" />
     <item
-        android:id="@+id/speed_400"
+        android:id="@+id/speed_250"
         android:icon="@drawable/glass_genius_glass"
-        android:title="400 WPM" />
+        android:title="250 WPM" />
     <item
         android:id="@+id/speed_500"
         android:icon="@drawable/glass_genius_glass"
         android:title="500 WPM" />
     <item
-        android:id="@+id/speed_600"
+        android:id="@+id/speed_750"
         android:icon="@drawable/glass_genius_glass"
-        android:title="600 WPM" />
+        android:title="750 WPM" />
 </menu>
