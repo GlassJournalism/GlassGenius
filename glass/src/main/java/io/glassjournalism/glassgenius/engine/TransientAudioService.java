@@ -101,7 +101,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                     String cardImageURL = Constants.API_ROOT + "/card/render/" + card.getId();
                     imageURLs.push(cardImageURL);
                 }
-                new ImageLoadTask().execute();
+                new ImageLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
             @Override
@@ -289,7 +289,7 @@ public class TransientAudioService extends Service implements RecognitionListene
                     @Override
                     public void onCompleted(Exception e, Bitmap result) {
                         if (imageURLs.size() > 0) {
-                            new ImageLoadTask().execute();
+                            new ImageLoadTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                         }
                     }
                 });

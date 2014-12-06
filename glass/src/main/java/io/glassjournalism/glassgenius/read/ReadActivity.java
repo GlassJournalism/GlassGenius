@@ -90,7 +90,7 @@ public class ReadActivity extends Activity {
                         articleList.addAll(articles);
                         Log.d(TAG, "article count: " + articles.size());
                         for (Article article : articles) {
-                            new FetchArticleTask().execute(article);
+                            new FetchArticleTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, article);
                         }
                     }
                 });

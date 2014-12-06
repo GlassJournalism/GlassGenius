@@ -93,7 +93,7 @@ public class POVActivity extends Activity {
                     public void onCompleted(Exception e, List<VideoResponse> videoResponses) {
                         videoList.addAll(videoResponses);
                         for (VideoResponse videoResponse : videoResponses) {
-                            new FetchVideoTask().execute(videoResponse);
+                            new FetchVideoTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, videoResponse);
                         }
                     }
                 });
