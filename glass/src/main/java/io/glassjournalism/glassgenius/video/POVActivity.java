@@ -22,7 +22,9 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import butterknife.ButterKnife;
@@ -42,20 +44,12 @@ public class POVActivity extends Activity {
     private AudioManager audio;
     private List<CardBuilder> cardList = new ArrayList<CardBuilder>();
     private List<VideoResponse> videoList = new ArrayList<VideoResponse>();
+    private Map<CardBuilder, String> videoMap = new HashMap<CardBuilder, String>();
 
     @Override
     protected void onResume() {
         super.onResume();
         mCardScroller.activate();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -77,9 +71,10 @@ public class POVActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 audio.playSoundEffect(Sounds.TAP);
-                VideoResponse video = (VideoResponse) videoCardAdapter.getItem(i);
+                CardBuilder card = (CardBuilder) videoCardAdapter.getItem(i);
+                String videoURL = videoMap.get(card);
                 Intent videoIntent = new Intent(POVActivity.this, VideoPlaybackActivity.class);
-                videoIntent.putExtra("videoURL", video.getUrl());
+                videoIntent.putExtra("videoURL", videoURL);
                 startActivity(videoIntent);
             }
         });
@@ -97,7 +92,6 @@ public class POVActivity extends Activity {
                         }
                     }
                 });
-
     }
 
     private class FetchVideoTask extends AsyncTask<VideoResponse, Void, Void> {
@@ -113,9 +107,11 @@ public class POVActivity extends Activity {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             }
-            cardList.add(new CardBuilder(POVActivity.this, CardBuilder.Layout.TITLE)
+            CardBuilder newCard = new CardBuilder(POVActivity.this, CardBuilder.Layout.TITLE)
                     .setText(videoResponse.getName())
-                    .addImage(image));
+                    .addImage(image);
+            cardList.add(newCard);
+            videoMap.put(newCard, videoResponse.getUrl());
             return null;
         }
 
@@ -134,7 +130,7 @@ public class POVActivity extends Activity {
 
         @Override
         public Object getItem(int position) {
-            return videoList.get(position);
+            return cardList.get(position);
         }
 
         @Override
