@@ -3,4 +3,16 @@
         android:id="@+id/view_source"
         android:icon="@drawable/glass_genius_glass"
         android:title="View Source" />
+    <item
+        android:id="@+id/speed_400"
+        android:icon="@drawable/glass_genius_glass"
+        android:title="400 WPM" />
+    <item
+        android:id="@+id/speed_500"
+        android:icon="@drawable/glass_genius_glass"
+        android:title="500 WPM" />
+    <item
+        android:id="@+id/speed_600"
+        android:icon="@drawable/glass_genius_glass"
+        android:title="600 WPM" />
 </menu>

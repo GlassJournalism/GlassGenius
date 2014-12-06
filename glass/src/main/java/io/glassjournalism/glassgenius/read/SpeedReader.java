@@ -3,10 +3,12 @@ package io.glassjournalism.glassgenius.read;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,10 +24,11 @@ import io.glassjournalism.glassgenius.R;
 public class SpeedReader extends Activity {
 
     TextView flash_me;
-    public static int WPM = 500;
     int index = 0;
     String[] words;
     private AudioManager audio;
+    SharedPreferences sharedPrefs;
+    private boolean paused = false;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,6 +40,7 @@ public class SpeedReader extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+            paused = true;
             audio.playSoundEffect(Sounds.TAP);
             openOptionsMenu();
             return true;
@@ -54,6 +58,19 @@ public class SpeedReader extends Activity {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
                 startActivity(intent);
+                paused = false;
+                return true;
+            case R.id.speed_400:
+                sharedPrefs.edit().putInt("WPM", 400).apply();
+                paused = false;
+                return true;
+            case R.id.speed_500:
+                sharedPrefs.edit().putInt("WPM", 500).apply();
+                paused = false;
+                return true;
+            case R.id.speed_600:
+                sharedPrefs.edit().putInt("WPM", 600).apply();
+                paused = false;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -64,6 +81,7 @@ public class SpeedReader extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         Intent intent = getIntent();
         String toSplit = intent.getStringExtra(ReadActivity.EXTRA_MESSAGE);
@@ -79,12 +97,12 @@ public class SpeedReader extends Activity {
         public void run() {
             if (index == 0) {
                 flash_me.setText(words[index]);
-                index++;
+                if (!paused) index++;
                 handle.postDelayed(timer, 2000);
             } else if (index < words.length) {
                 flash_me.setText(words[index]);
-                index++;
-                handle.postDelayed(timer, 60000 / WPM);
+                if (!paused) index++;
+                handle.postDelayed(timer, 60000 / sharedPrefs.getInt("WPM", 500));
             }
         }
     };

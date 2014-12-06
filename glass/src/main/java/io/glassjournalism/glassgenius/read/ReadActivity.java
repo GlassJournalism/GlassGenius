@@ -3,10 +3,12 @@ package io.glassjournalism.glassgenius.read;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,16 +44,17 @@ public class ReadActivity extends Activity {
     private List<Article> articleList = new ArrayList<Article>();
     private ArticleCardScrollAdapter mAdapter;
     private AudioManager audio;
+    SharedPreferences sharedPrefs;
 
     public final static String EXTRA_MESSAGE = "ARTICLE_TEXT";
     public final static String SOURCE_URL = "SOURCE_URL";
-
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_read);
         ButterKnife.inject(this);
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAdapter = new ArticleCardScrollAdapter();
         mCardScroller.setAdapter(mAdapter);
@@ -143,7 +146,7 @@ public class ReadActivity extends Activity {
                 e.printStackTrace();
             }
             int length = article.getContents().split("[,\\s]+").length;
-            int minutes = length/SpeedReader.WPM;
+            int minutes = length / sharedPrefs.getInt("WPM", 500);
             String time;
             if (minutes <= 1) {
                 time = "Less than 1 minute";
