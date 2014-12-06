@@ -36,25 +36,12 @@
 
             </LinearLayout>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:layout_gravity="center"
-                android:id="@+id/cardImageLayout">
-
-                <ProgressBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/progressBar"
-                    android:layout_gravity="center" />
-
-                <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="center"
-                    android:id="@+id/cardImageView" />
-
-            </FrameLayout>
+                android:scaleType="fitXY"
+                android:id="@+id/cardImageView" />
 
             <LinearLayout
                 android:layout_width="match_parent"

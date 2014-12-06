@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.faizmalkani.floatingactionbutton.FloatingActionButton;
 import com.koushikdutta.ion.Ion;
 import com.percolate.caffeine.MiscUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -170,16 +171,17 @@ public class StoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.card_preview_card, null);
         TextView title = (TextView) view.findViewById(R.id.cardTitle);
 
-        FrameLayout cardImageLayout = (FrameLayout) view.findViewById(R.id.cardImageLayout);
+        ImageView imageView = (ImageView) view.findViewById(R.id.cardImageView);
+
         int width = getResources().getDisplayMetrics().widthPixels - MiscUtils.dpToPx(getActivity(), 32);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) ((9.f/16.f) * ((float) width)));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) ((9.f/16.f) * ((float) width)));
 
         TextView triggerWordTitle = (TextView) view.findViewById(R.id.triggerWordTitle);
         final ImageView triggerWordToggle = (ImageView) view.findViewById(R.id.triggerWordToggle);
 
         final LinearLayout triggerWordLinearLayout = (LinearLayout) view.findViewById(R.id.triggerWordLinearLayout);
 
-        cardImageLayout.setLayoutParams(layoutParams);
+        imageView.setLayoutParams(layoutParams);
 
         title.setText(geniusCard.getName());
 
@@ -189,8 +191,6 @@ public class StoryFragment extends Fragment {
         int wvWidth = getActivity().getResources().getDisplayMetrics().widthPixels - MiscUtils.dpToPx(getActivity(), 32);
         int wvHeight = (int) (9.f/16.f) * wvWidth;
         int scalePercent = (int) (((double) wvWidth)/640.f * 100);
-
-        ImageView imageView = (ImageView) view.findViewById(R.id.cardImageView);
 
         List<String> triggerWords = geniusCard.getTriggerWords();
 
@@ -227,7 +227,7 @@ public class StoryFragment extends Fragment {
 
         scrollViewLinearLayout.addView(view);
 
-        Ion.with(imageView).load(Constants.API_ROOT + "/card/render/" + geniusCard.getId());
+        Picasso.with(getActivity()).load(Constants.API_ROOT + "/card/render/" + geniusCard.getId()).into(imageView);
 
     }
 
